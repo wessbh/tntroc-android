@@ -54,9 +54,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().popBackStack();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new FragmentHome()).commit();
 
-        //Remove line to test RTL support
-        //getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-
         // Handle Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
