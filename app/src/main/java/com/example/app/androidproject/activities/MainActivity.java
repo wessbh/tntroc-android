@@ -128,7 +128,8 @@ public class MainActivity extends AppCompatActivity {
                         if (drawerItem != null) {
                             Fragment f2 = null;
                             if (drawerItem.getIdentifier() == 1) {
-                                f2 = new FragmentHome();Bundle bundle = new Bundle();
+                                f2 = new FragmentHome();
+                                Bundle bundle = new Bundle();
                                 bundle.putString("apiKey", apikey);
                                 f2.setArguments(bundle);
                             }
