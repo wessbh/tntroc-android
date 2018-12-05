@@ -1,19 +1,23 @@
 package com.example.app.androidproject.utils;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.app.androidproject.Entity.Annonce;
+import com.example.app.androidproject.Entity.Constants;
 import com.example.app.androidproject.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
 public class AnnonceAdapter extends RecyclerView.Adapter<AnnonceAdapter.MyViewHolder> {
 
     private List<Annonce> annoncesList;
@@ -25,7 +29,7 @@ public class AnnonceAdapter extends RecyclerView.Adapter<AnnonceAdapter.MyViewHo
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView titre, year;
         Button btn_postuler;
-        ImageView img;
+        ImageView img, fakeImg;
 
         public MyViewHolder(View view) {
             super(view);
@@ -48,11 +52,17 @@ public class AnnonceAdapter extends RecyclerView.Adapter<AnnonceAdapter.MyViewHo
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Annonce annonce = annoncesList.get(position);
         String strPoste = annonce.getTitle();
-
+        Context context = holder.img.getContext();
+        Picasso.get().load(Constants.ANNONCE_IMG_PATH+annonce.getImg())
+                .error(R.drawable.fb)
+                .placeholder(R.drawable.placeholder)
+                .into(holder.img);
+        //Picasso.get().load(Constants.ANNONCE_IMG_PATH+annonce.getImg()).into(holder.img);
         if(strPoste.length()>=31){
             String str2 = strLimite(strPoste);
             holder.titre.setText(str2);
             holder.year.setText(annonce.getDate_exp());
+
         }
         else{
             holder.titre.setText(annonce.getTitle());

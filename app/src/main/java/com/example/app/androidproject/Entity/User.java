@@ -6,15 +6,17 @@ public class User {
     private String name;
     private String last_name;
     private String email;
-    private String password;
     private String numtel;
     private String adresse;
     private String date_naissance;
     private String api_key;
     private String image;
+    private String last_login;
 
+    public User() {
+    }
 
-    public User(int id, String username, String name, String last_name, String email, String numtel, String adresse, String date_naissance, String api_key, String image) {
+    public User(int id, String username, String name, String last_name, String email, String numtel, String adresse, String date_naissance, String api_key, String image, String last_login) {
         this.id = id;
         this.username = username;
         this.name = name;
@@ -25,6 +27,7 @@ public class User {
         this.date_naissance = date_naissance;
         this.api_key = api_key;
         this.image = image;
+        this.last_login = last_login;
     }
 
     public int getId() {
@@ -67,14 +70,6 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getNumtel() {
         return numtel;
     }
@@ -113,5 +108,13 @@ public class User {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getLast_login() {
+        return last_login;
+    }
+
+    public void setLast_login(String last_login) {
+        this.last_login = last_login;
     }
 }

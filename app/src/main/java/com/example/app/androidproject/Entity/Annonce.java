@@ -1,28 +1,21 @@
 package com.example.app.androidproject.Entity;
 
 public class Annonce {
-    int id;
-    String title;
-    String description;
-    int user_id;
-    String img;
-    String created_at;
-    String date_exp;
-    int status;
-    String updated_at;
+    private int id;
+    private String title;
+    private String description;
+    private int user_id;
+    private String img;
+    private String created_at;
+    private String date_exp;
+    private int status;
+    private String updated_at;
+    private String categorie;
 
-    public Annonce(String title, String description, int user_id, String img, String created_at, String date_exp, int status, String updated_at) {
-        this.title = title;
-        this.description = description;
-        this.user_id = user_id;
-        this.img = img;
-        this.created_at = created_at;
-        this.date_exp = date_exp;
-        this.status = status;
-        this.updated_at = updated_at;
+    public Annonce() {
     }
 
-    public Annonce(int id, String title, String description, int user_id, String img, String created_at, String date_exp, int status) {
+    public Annonce(int id, String title, String description, int user_id, String img, String created_at, String date_exp, int status, String updated_at, String categorie) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -31,6 +24,20 @@ public class Annonce {
         this.created_at = created_at;
         this.date_exp = date_exp;
         this.status = status;
+        this.updated_at = updated_at;
+        this.categorie = categorie;
+    }
+
+    public Annonce(String title, String description, int user_id, String img, String created_at, String date_exp, int status, String updated_at, String categorie) {
+        this.title = title;
+        this.description = description;
+        this.user_id = user_id;
+        this.img = img;
+        this.created_at = created_at;
+        this.date_exp = date_exp;
+        this.status = status;
+        this.updated_at = updated_at;
+        this.categorie = categorie;
     }
 
     public int getId() {
@@ -103,5 +110,13 @@ public class Annonce {
 
     public void setUpdated_at(String updated_at) {
         this.updated_at = updated_at;
+    }
+
+    public String getCategorie() {
+        return categorie;
+    }
+
+    public void setCategorie(String categorie) {
+        this.categorie = categorie;
     }
 }

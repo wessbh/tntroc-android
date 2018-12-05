@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -61,8 +60,7 @@ public class FragmentHome extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_layout, container, false);
-        MainActivity act = (MainActivity) getActivity();
-        apiKey = act.getApi_key();
+        apiKey = Constants.user.getApi_key();
         textTitle = view.findViewById(R.id.textTitle);
 
         TextView testLink = view.findViewById(R.id.testLink);
@@ -114,9 +112,17 @@ public class FragmentHome extends Fragment {
                                 String titre = post.getString("title");
                                 String desc = post.getString("description");
                                 String strDate = post.getString("created_at");
-                                Annonce annonce = new Annonce(id, titre, desc,6,"img",strDate,"10/10/2020",1 );
-                                Annonce annoncee = new Annonce(20, "post1", "description",6,"img","date","10/10/2020",1 );
+                                String img = post.getString("img");
+                                String categorie = post.getString("categorie");
+                                Annonce annonce = new Annonce();
+                                annonce.setId(id);
+                                annonce.setTitle(titre);
+                                annonce.setDescription(desc);
+                                annonce.setCreated_at(strDate);
+                                annonce.setImg(img);
+                                annonce.setCategorie(categorie);
                                 annoncesList.add(annonce);
+                                Log.d("here", annoncesList.toString());
                             }
                             progressDialog.dismiss();
                             mAdapter = new AnnonceAdapter(annoncesList);

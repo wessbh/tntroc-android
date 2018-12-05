@@ -12,8 +12,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.app.androidproject.Entity.Constants;
+import com.example.app.androidproject.Entity.User;
 import com.example.app.androidproject.R;
 import com.example.app.androidproject.fragments.FragmentHome;
+import com.google.gson.Gson;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.mikepenz.itemanimators.AlphaCrossFadeAnimator;
@@ -32,7 +34,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 public class MainActivity extends AppCompatActivity {
     private static final int PROFILE_SETTING = 100000;
     private String apikey, full_name;
-    public static int user_id = 2;
+    private User user = Constants.user;
     //save our header or result
     private AccountHeader headerResult = null;
     private Drawer result = null;
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setConstants();
+        //Toast.makeText(getApplicationContext(), Constants.user.getLast_login(), Toast.LENGTH_SHORT).show();
         apikey = getAPIKey();
         full_name = getFullName();
         if (getAPIKey().equals("")){
@@ -112,9 +116,7 @@ public class MainActivity extends AppCompatActivity {
                         new SectionDrawerItem().withName("Mise A jour Profil").withDivider(true),
                         new PrimaryDrawerItem().withName("Mot de passe").withIcon(FontAwesome.Icon.faw_user_lock).withIdentifier(5).withSelectable(true),
                         new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withName("Se déconnecter").withIcon(FontAwesome.Icon.faw_sign_out_alt).withIdentifier(21).withSelectable(false),
-                        new PrimaryDrawerItem().withName("Quitter").withIcon(FontAwesome.Icon.faw_times).withIdentifier(22).withSelectable(false)
-
+                        new PrimaryDrawerItem().withName("Se déconnecter").withIcon(FontAwesome.Icon.faw_sign_out_alt).withIdentifier(21).withSelectable(false)
                 ) // add the items we want to use with our Drawer
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -233,14 +235,12 @@ public class MainActivity extends AppCompatActivity {
     }
     public String getAPIKey (){
         String s;
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE);
-        s = sharedPreferences.getString(Constants.API_KEY, null);
+        s = Constants.user.getApi_key();
         return s;
     }
     public String getFullName (){
         String s;
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE);
-        s = sharedPreferences.getString(Constants.USERNAME, null);
+        s= Constants.user.getName()+" "+Constants.user.getLast_name();
         return s;
     }
     public void setSharedPrefs(final String name, final String api_key){
@@ -260,4 +260,14 @@ public class MainActivity extends AppCompatActivity {
         return apikey;
     }
 
+    public User getUser() {
+        return user;
+    }
+    public void setConstants (){
+        Gson gson = new Gson();
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE);
+        String json = sharedPreferences.getString(Constants.USER_STR, null);
+        User u = gson.fromJson(json, User.class);
+        Constants.user = u;
+    }
 }

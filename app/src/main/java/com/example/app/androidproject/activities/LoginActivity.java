@@ -10,6 +10,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.app.androidproject.Entity.Constants;
+import com.example.app.androidproject.Entity.User;
 import com.example.app.androidproject.R;
 
 import android.app.ProgressDialog;
@@ -30,6 +31,8 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView link_signup;
     String username, password, email, birthday, responseName, responseApi_key;
     ImageView logo;
+    User user;
     private RequestQueue mQueue;
 
     @Override
@@ -167,6 +171,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     public void loginRequest (final String usernameLogin, final String passwordLogin ){
         progressDialog.show();
+        user = new User();
         String url = Constants.WEBSERVICE_URL+"/mdw/v1/login";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
@@ -176,10 +181,21 @@ public class LoginActivity extends AppCompatActivity {
                         String respApi;
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            String respName = jsonObject.get("name").toString()+" "+jsonObject.get("last_name").toString();
+                            user.setId(Integer.valueOf(jsonObject.get("id").toString()));
+                            user.setUsername(jsonObject.get("username").toString());
+                            user.setName(jsonObject.get("name").toString());
+                            user.setLast_name(jsonObject.get("last_name").toString());
+                            user.setEmail(jsonObject.get("email").toString());
+                            user.setNumtel(jsonObject.get("num_tel").toString());
+                            user.setAdresse(jsonObject.get("adresse").toString());
+                            user.setDate_naissance(jsonObject.get("date_naissance").toString());
+                            user.setApi_key(jsonObject.get("apiKey").toString());
+                            user.setImage(jsonObject.get("image").toString());
+                            user.setLast_login(jsonObject.get("last_login").toString());
+                            String respName = user.getName()+" "+user.getLast_name();
+                            setUserSharedPrefs(user);
                             loginSharedPrefs(respName, ""+jsonObject.get("apiKey").toString() );
                             progressDialog.dismiss();
-                            Toast.makeText(getApplication(),jsonObject.get("name").toString(), Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
@@ -230,6 +246,15 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString(Constants.API_KEY, api_key);
         editor.apply();
     }
+
+    public void setUserSharedPrefs(final User user){
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+        editor.putString(Constants.USER_STR, json);
+        editor.apply();
+    }
     public Boolean checkSharedPrefs(){
         String s;
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE);
@@ -240,6 +265,10 @@ public class LoginActivity extends AppCompatActivity {
         else
         return false;
     }
+    public void setUser(final User u){
+        Constants.user = u;
+    }
+
     public String getAPIKey (){
         String s;
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE);
