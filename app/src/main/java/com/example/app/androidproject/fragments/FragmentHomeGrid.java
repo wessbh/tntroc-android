@@ -1,16 +1,16 @@
 package com.example.app.androidproject.fragments;
 
+
 import android.app.ProgressDialog;
-import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,71 +25,58 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.app.androidproject.Entity.Annonce;
 import com.example.app.androidproject.Entity.Constants;
-import com.example.app.androidproject.activities.LoginActivity;
 import com.example.app.androidproject.R;
-import com.example.app.androidproject.utils.*;
+import com.example.app.androidproject.utils.AnnonceGridAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FragmentHome extends Fragment {
-    private static final String TAG = "FragmentHome";
-
-    private List<Annonce> annoncesList = new ArrayList<>();
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class FragmentHomeGrid extends Fragment {
     private RecyclerView recyclerView;
-    private AnnonceListAdapter mAdapter;
+    private AnnonceGridAdapter adapter, mAdapter;
+    private List<Annonce> annoncesList = new ArrayList<>();
     private RequestQueue mQueue;
-    TextView textTitle;
-    String apiKey;
     ProgressDialog progressDialog;
+    private GridLayoutManager lLayout;
 
-    @Nullable
+    public FragmentHomeGrid() {
+        // Required empty public constructor
+    }
+
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home_layout, container, false);
-        apiKey = Constants.user.getApi_key();
-        textTitle = view.findViewById(R.id.textTitle);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home_grid, container, false);
 
-        TextView testLink = view.findViewById(R.id.testLink);
-        testLink.setText("ClickMe!");
-        testLink.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), LoginActivity.class);
-                        startActivity(intent);
-                        getActivity().finish();
-            }
-        });
-        //------------------------- RecyclerView -----------------------------------\\
-
-        recyclerView = view.findViewById(R.id.recycler_view);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        textTitle.setText("Vous n'avez aucun PDF");
-        textTitle.setVisibility(View.GONE);
         mQueue = Volley.newRequestQueue(getContext());
+        TextView txt = view.findViewById(R.id.myText);
+        txt.setText("Changed !!!");
+       recyclerView = view.findViewById(R.id.recycler_view);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        /*lLayout = new GridLayoutManager(getActivity(), 2);
+        recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(lLayout);*/
         jsonParse();
 
         return view;
     }
 
-
     public void jsonParse() {
         String url =  Constants.WEBSERVICE_URL+"/mdw/v1/all_posts";
-        String urlOffres1 ="https://api.myjson.com/bins/6wo6o";
-        String urlOffres2="https://api.myjson.com/bins/kndlk";
         progressDialog = new ProgressDialog(getContext(),
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
@@ -120,10 +107,11 @@ public class FragmentHome extends Fragment {
                                 annonce.setCategorie(categorie);
                                 annoncesList.add(annonce);
                             }
+                            Log.d("here", annoncesList.toString());
                             progressDialog.dismiss();
-                            mAdapter = new AnnonceListAdapter(annoncesList);
+                            mAdapter = new AnnonceGridAdapter(getActivity(), annoncesList);
                             recyclerView.setAdapter(mAdapter);
-                           // progressBar.setVisibility(View.GONE);
+                            // progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -148,14 +136,48 @@ public class FragmentHome extends Fragment {
         };
         mQueue.add(request);
     }
-    public Date convertDate(String strDate){
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = null;
-        try {
-            date = formatter.parse(strDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
+
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+        private int spacing;
+        private boolean includeEdge;
+
+        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
         }
-        return date;
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
+
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Converting dp to pixel
+     */
+    private int dpToPx(int dp) {
+        Resources r = getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 }

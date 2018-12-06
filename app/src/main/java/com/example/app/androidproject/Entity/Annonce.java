@@ -119,4 +119,20 @@ public class Annonce {
     public void setCategorie(String categorie) {
         this.categorie = categorie;
     }
+
+    @Override
+    public String toString() {
+        return "Annonce{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", user_id=" + user_id +
+                ", img='" + img + '\'' +
+                ", created_at='" + created_at + '\'' +
+                ", date_exp='" + date_exp + '\'' +
+                ", status=" + status +
+                ", updated_at='" + updated_at + '\'' +
+                ", categorie='" + categorie + '\'' +
+                '}';
+    }
 }

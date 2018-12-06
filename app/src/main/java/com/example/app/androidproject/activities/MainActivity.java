@@ -15,6 +15,7 @@ import com.example.app.androidproject.Entity.Constants;
 import com.example.app.androidproject.Entity.User;
 import com.example.app.androidproject.R;
 import com.example.app.androidproject.fragments.FragmentHome;
+import com.example.app.androidproject.fragments.FragmentHomeGrid;
 import com.google.gson.Gson;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
@@ -34,7 +35,6 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 public class MainActivity extends AppCompatActivity {
     private static final int PROFILE_SETTING = 100000;
     private String apikey, full_name;
-    private User user = Constants.user;
     //save our header or result
     private AccountHeader headerResult = null;
     private Drawer result = null;
@@ -131,12 +131,9 @@ public class MainActivity extends AppCompatActivity {
                             Fragment f2 = null;
                             if (drawerItem.getIdentifier() == 1) {
                                 f2 = new FragmentHome();
-                                Bundle bundle = new Bundle();
-                                bundle.putString("apiKey", apikey);
-                                f2.setArguments(bundle);
                             }
                             if (drawerItem.getIdentifier() == 3) {
-                                f2 = new FragmentHome();
+                                f2 = new FragmentHomeGrid();
                             }
                             if (drawerItem.getIdentifier() == 2) {
                                 f2 = new FragmentHome();
@@ -260,14 +257,11 @@ public class MainActivity extends AppCompatActivity {
         return apikey;
     }
 
-    public User getUser() {
-        return user;
-    }
     public void setConstants (){
         Gson gson = new Gson();
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE);
-        String json = sharedPreferences.getString(Constants.USER_STR, null);
-        User u = gson.fromJson(json, User.class);
+        String myStr = sharedPreferences.getString(Constants.USER_STR, null);
+        User u = gson.fromJson(myStr, User.class);
         Constants.user = u;
     }
 }
