@@ -28,13 +28,14 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
     private List<Annonce> annonceList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, categorie;
+        public TextView title, categorie, prix;
         public ImageView thumbnail, overflow;
 
         public MyViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title);
             categorie = (TextView) view.findViewById(R.id.category);
+            prix = (TextView) view.findViewById(R.id.price);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
             overflow = (ImageView) view.findViewById(R.id.overflow);
         }
@@ -59,6 +60,7 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
         Annonce annonce = annonceList.get(position);
         holder.title.setText(annonce.getTitle());
         holder.categorie.setText(annonce.getCategorie());
+        holder.prix.setText(annonce.getPrix()+" Dt");
 
         // loading album cover using Glide library
        // Glide.with(mContext).load(annonce.getImg()).into(holder.thumbnail);

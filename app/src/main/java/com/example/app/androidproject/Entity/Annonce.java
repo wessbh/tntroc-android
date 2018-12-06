@@ -11,11 +11,12 @@ public class Annonce {
     private int status;
     private String updated_at;
     private String categorie;
+    private int prix;
 
     public Annonce() {
     }
 
-    public Annonce(int id, String title, String description, int user_id, String img, String created_at, String date_exp, int status, String updated_at, String categorie) {
+    public Annonce(int id, String title, String description, int user_id, String img, String created_at, String date_exp, int status, String updated_at, String categorie, int prix) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -26,9 +27,10 @@ public class Annonce {
         this.status = status;
         this.updated_at = updated_at;
         this.categorie = categorie;
+        this.prix = prix;
     }
 
-    public Annonce(String title, String description, int user_id, String img, String created_at, String date_exp, int status, String updated_at, String categorie) {
+    public Annonce(String title, String description, int user_id, String img, String created_at, String date_exp, int status, String updated_at, String categorie, int prix) {
         this.title = title;
         this.description = description;
         this.user_id = user_id;
@@ -38,6 +40,7 @@ public class Annonce {
         this.status = status;
         this.updated_at = updated_at;
         this.categorie = categorie;
+        this.prix = prix;
     }
 
     public int getId() {
@@ -118,6 +121,14 @@ public class Annonce {
 
     public void setCategorie(String categorie) {
         this.categorie = categorie;
+    }
+
+    public int getPrix() {
+        return prix;
+    }
+
+    public void setPrix(int prix) {
+        this.prix = prix;
     }
 
     @Override

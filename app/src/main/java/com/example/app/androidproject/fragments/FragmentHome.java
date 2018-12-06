@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -88,8 +89,6 @@ public class FragmentHome extends Fragment {
 
     public void jsonParse() {
         String url =  Constants.WEBSERVICE_URL+"/mdw/v1/all_posts";
-        String urlOffres1 ="https://api.myjson.com/bins/6wo6o";
-        String urlOffres2="https://api.myjson.com/bins/kndlk";
         progressDialog = new ProgressDialog(getContext(),
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
@@ -100,7 +99,6 @@ public class FragmentHome extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-
                             JSONArray jsonArray = response.getJSONArray("post");
                             Log.d("annonce", response.getJSONArray("post").getJSONObject(0).toString());
                             for (int i = 0; i < jsonArray.length(); i++) {
@@ -123,7 +121,6 @@ public class FragmentHome extends Fragment {
                             progressDialog.dismiss();
                             mAdapter = new AnnonceListAdapter(annoncesList);
                             recyclerView.setAdapter(mAdapter);
-                           // progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -141,7 +138,6 @@ public class FragmentHome extends Fragment {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
-                //headers.put("Content-Type", "application/json");
                 headers.put("Authorization", Constants.user.getApi_key());
                 return headers;
             }

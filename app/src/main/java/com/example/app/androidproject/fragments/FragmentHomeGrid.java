@@ -98,6 +98,7 @@ public class FragmentHomeGrid extends Fragment {
                                 String strDate = post.getString("created_at");
                                 String img = post.getString("img");
                                 String categorie = post.getString("categorie");
+                                String prix = post.getString("prix");
                                 Annonce annonce = new Annonce();
                                 annonce.setId(id);
                                 annonce.setTitle(titre);
@@ -105,6 +106,7 @@ public class FragmentHomeGrid extends Fragment {
                                 annonce.setCreated_at(strDate);
                                 annonce.setImg(img);
                                 annonce.setCategorie(categorie);
+                                annonce.setPrix(Integer.valueOf(prix));
                                 annoncesList.add(annonce);
                             }
                             Log.d("here", annoncesList.toString());

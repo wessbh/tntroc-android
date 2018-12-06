@@ -3,8 +3,10 @@ package com.example.app.androidproject.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +18,8 @@ import com.example.app.androidproject.Entity.User;
 import com.example.app.androidproject.R;
 import com.example.app.androidproject.fragments.FragmentHome;
 import com.example.app.androidproject.fragments.FragmentHomeGrid;
+import com.example.app.androidproject.fragments.FragmentViewPager;
+import com.example.app.androidproject.utils.Pager;
 import com.google.gson.Gson;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
@@ -32,9 +36,14 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity /*implements TabLayout.OnTabSelectedListener */{
     private static final int PROFILE_SETTING = 100000;
     private String apikey, full_name;
+
+    private TabLayout tabLayout;
+    //This is our viewPager
+    private ViewPager viewPager;
+
     //save our header or result
     private AccountHeader headerResult = null;
     private Drawer result = null;
@@ -47,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setConstants();
-        //Toast.makeText(getApplicationContext(), Constants.user.getLast_login(), Toast.LENGTH_SHORT).show();
         apikey = getAPIKey();
         full_name = getFullName();
         if (getAPIKey().equals("")){
@@ -56,14 +64,11 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
         getSupportFragmentManager().popBackStack();
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new FragmentHome()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new FragmentViewPager()).commit();
 
-        // Handle Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Create a few sample profile
-        // NOTE you have to define the loader logic too. See the CustomApplication for more details
         final IProfile profile = new ProfileDrawerItem().withName(full_name).withIcon("https://avatars3.githubusercontent.com/u/1476232?v=3&s=460").withIdentifier(100);
 
 
@@ -79,27 +84,22 @@ public class MainActivity extends AppCompatActivity {
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean current) {
-                        //sample usage of the onProfileChanged listener
-                        //if the clicked item has the identifier 1 add a new profile ;)
                         if (profile instanceof IDrawerItem && profile.getIdentifier() == PROFILE_SETTING) {
                             int count = 100 + headerResult.getProfiles().size() + 1;
                             IProfile newProfile = new ProfileDrawerItem().withNameShown(true).withName("Batman" + count).withEmail("batman" + count + "@gmail.com").withIcon(R.drawable.profile).withIdentifier(count);
                             if (headerResult.getProfiles() != null) {
-                                //we know that there are 2 setting elements. set the new profile above them ;)
                                 headerResult.addProfile(newProfile, headerResult.getProfiles().size() - 2);
                             } else {
                                 headerResult.addProfiles(newProfile);
                             }
                         }
 
-                        //false if you have not consumed the event and it should close the drawer
                         return false;
                     }
                 })
                 .withSavedInstance(savedInstanceState)
                 .build();
 
-        //Create the drawer
         result = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
@@ -117,31 +117,25 @@ public class MainActivity extends AppCompatActivity {
                         new PrimaryDrawerItem().withName("Mot de passe").withIcon(FontAwesome.Icon.faw_user_lock).withIdentifier(5).withSelectable(true),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName("Se déconnecter").withIcon(FontAwesome.Icon.faw_sign_out_alt).withIdentifier(21).withSelectable(false)
-                ) // add the items we want to use with our Drawer
+                )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        //check if the drawerItem is set.
-                        //there are different reasons for the drawerItem to be null
-                        //--> click on the header
-                        //--> click on the footer
-                        //those items don't contain a drawerItem
 
                         if (drawerItem != null) {
                             Fragment f2 = null;
                             if (drawerItem.getIdentifier() == 1) {
+                                f2 = new FragmentViewPager();
+                            }
+                            if (drawerItem.getIdentifier() == 2) {
                                 f2 = new FragmentHome();
                             }
                             if (drawerItem.getIdentifier() == 3) {
                                 f2 = new FragmentHomeGrid();
                             }
-                            if (drawerItem.getIdentifier() == 2) {
-                                f2 = new FragmentHome();
-                            }
                             if (drawerItem.getIdentifier() == 21) {
                                 disconnect();
                             }
-
                             if (f2 != null) {
                                 getSupportFragmentManager().popBackStack();
                                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, f2).commit();
@@ -153,12 +147,9 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .withSavedInstance(savedInstanceState)
                 .withShowDrawerOnFirstLaunch(true)
-//              .withShowDrawerUntilDraggedOpened(true)
                 .withOnDrawerNavigationListener(new Drawer.OnDrawerNavigationListener() {
                     @Override
                     public boolean onNavigationClickListener(View clickedView) {
-                        //In our case this method is always called with getSupportFragmentManager().getBackStackEntryCount() > 0 because of our addOnBackStackChangedListener
-                        //if (getSupportFragmentManager().getBackStackEntryCount() > 0) {//can go back
                         onBackPressed();
                         //}
                         return true;
@@ -173,22 +164,15 @@ public class MainActivity extends AppCompatActivity {
                     result.getActionBarDrawerToggle().setDrawerIndicatorEnabled(false);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-                    //if you dont want the drawer to be opened in Fragment
-                    //  result.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 } else {
                     //change to hamburger icon
 
                     result.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
-                    //call this method to display hamburger icon
                     result.getActionBarDrawerToggle().syncState();
-
-                    //result.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 }
             }
         });
-        //only set the active selection or active profile if we do not recreate the activity
         if (savedInstanceState == null) {
             // set the selection to the item with the identifier 11
             result.setSelection(1, false);
@@ -198,19 +182,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
-    /*
-    private OnCheckedChangeListener onCheckedChangeListener = new OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(IDrawerItem drawerItem, CompoundButton buttonView, boolean isChecked) {
-            if (drawerItem instanceof Nameable) {
-                Log.i("material-drawer", "DrawerItem: " + ((Nameable) drawerItem).getName() + " - toggleChecked: " + isChecked);
-            } else {
-                Log.i("material-drawer", "toggleChecked: " + isChecked);
-            }
-        }
-    };
-    */
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -264,4 +235,5 @@ public class MainActivity extends AppCompatActivity {
         User u = gson.fromJson(myStr, User.class);
         Constants.user = u;
     }
+
 }
