@@ -222,14 +222,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 return params;
             }
-            /*
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  headers = new HashMap<String, String>();
-                headers.put("Authorization",)
-                return super.getHeaders();
-
-            }*/
         };
         mQueue.add(postRequest);
     }
