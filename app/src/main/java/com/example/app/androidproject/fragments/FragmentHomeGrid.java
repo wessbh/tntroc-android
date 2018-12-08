@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -41,26 +43,39 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class FragmentHomeGrid extends Fragment {
+    private FloatingActionButton add;
     private RecyclerView recyclerView;
     private AnnonceGridAdapter adapter, mAdapter;
     private List<Annonce> annoncesList = new ArrayList<>();
     private RequestQueue mQueue;
     ProgressDialog progressDialog;
     private GridLayoutManager lLayout;
+    private static final String ARG_SECTION_NUMBER = "section_number";
+    private static final String ROOT = "ROOTING";
+    private int sectionNumber;
+    private String root;
 
     public FragmentHomeGrid() {
-        // Required empty public constructor
     }
 
 
+    public static FragmentHomeGrid newInstance(int sectionNumber, String root) {
+        FragmentHomeGrid fragment = new FragmentHomeGrid();
+        Bundle args = new Bundle();
+        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+        args.putString(ROOT, root);
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_grid, container, false);
+        add = view.findViewById(R.id.add_btn);
 
+        sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
+        root = getArguments().getString(ROOT);
         mQueue = Volley.newRequestQueue(getContext());
-        TextView txt = view.findViewById(R.id.myText);
-        txt.setText("Changed !!!");
        recyclerView = view.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -70,13 +85,13 @@ public class FragmentHomeGrid extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(lLayout);*/
-        jsonParse();
+        jsonParse(root);
 
         return view;
     }
 
-    public void jsonParse() {
-        String url =  Constants.WEBSERVICE_URL+"/mdw/v1/all_posts";
+    public void jsonParse(String root) {
+        String url =  Constants.WEBSERVICE_URL+"/mdw/v1/"+root;
         progressDialog = new ProgressDialog(getContext(),
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
@@ -89,7 +104,6 @@ public class FragmentHomeGrid extends Fragment {
                         try {
 
                             JSONArray jsonArray = response.getJSONArray("post");
-                            Log.d("annonce", response.getJSONArray("post").getJSONObject(0).toString());
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject post = jsonArray.getJSONObject(i);
                                 int id = post.getInt("id");
@@ -109,7 +123,6 @@ public class FragmentHomeGrid extends Fragment {
                                 annonce.setPrix(Integer.valueOf(prix));
                                 annoncesList.add(annonce);
                             }
-                            Log.d("here", annoncesList.toString());
                             progressDialog.dismiss();
                             mAdapter = new AnnonceGridAdapter(getActivity(), annoncesList);
                             recyclerView.setAdapter(mAdapter);

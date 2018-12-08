@@ -125,13 +125,12 @@ public class MainActivity extends AppCompatActivity /*implements TabLayout.OnTab
                         if (drawerItem != null) {
                             Fragment f2 = null;
                             if (drawerItem.getIdentifier() == 1) {
-                                f2 = new FragmentViewPager();
                             }
                             if (drawerItem.getIdentifier() == 2) {
                                 f2 = new FragmentHome();
                             }
                             if (drawerItem.getIdentifier() == 3) {
-                                f2 = new FragmentHomeGrid();
+                                f2 = FragmentHomeGrid.newInstance(0, "posts_user/"+Constants.user.getId());
                             }
                             if (drawerItem.getIdentifier() == 21) {
                                 disconnect();

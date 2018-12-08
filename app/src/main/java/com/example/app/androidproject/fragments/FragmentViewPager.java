@@ -65,7 +65,6 @@ public class FragmentViewPager extends Fragment {
         viewPager= (ViewPager) view.findViewById(R.id.viewpager);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        Toast.makeText(getActivity(), categoriesList.toString(), Toast.LENGTH_SHORT).show();
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
@@ -107,16 +106,18 @@ public class FragmentViewPager extends Fragment {
 
             switch (position) {
                 case 0:
-                    return new FragmentHome();
+                    return FragmentHomeGrid.newInstance(0,"all_posts");
                 case 1:
-                    return new FragmentHomeGrid();
+                    return FragmentHomeGrid.newInstance(1,"posts_by_categorie/Accessoire");
                 case 2:
-                    return new FragmentHome();
+                    return FragmentHomeGrid.newInstance(2,"posts_by_categorie/Ordinateur");
                 case 3:
-                    return new FragmentHomeGrid();
+                    return FragmentHomeGrid.newInstance(3,"posts_by_categorie/Telephone");
                 case 4:
-                    return new FragmentHome();
+                    return new FragmentHomeGrid();
                 case 5:
+                    return new FragmentHome();
+                case 6:
                     return new FragmentHomeGrid();
 
                 default:
@@ -151,6 +152,9 @@ public class FragmentViewPager extends Fragment {
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject cat = jsonArray.getJSONObject(i);
                                 String libelle = cat.getString("libelle");
+                                if(libelle.equals("Aall"))
+                                    categoriesList.add("Annonces");
+                                else
                                 categoriesList.add(libelle);
                             }
                             viewPager.setAdapter(new PagerAdapter(getFragmentManager(), tabLayout.getTabCount(), categoriesList));

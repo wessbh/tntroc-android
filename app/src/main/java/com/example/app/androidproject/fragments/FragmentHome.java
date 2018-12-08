@@ -45,7 +45,8 @@ import java.util.Map;
 
 public class FragmentHome extends Fragment {
     private static final String TAG = "FragmentHome";
-
+    private static final String ARG_SECTION_NUMBER = "section_number";
+    private int sectionNumber;
     private List<Annonce> annoncesList = new ArrayList<>();
     private RecyclerView recyclerView;
     private AnnonceListAdapter mAdapter;
@@ -54,9 +55,18 @@ public class FragmentHome extends Fragment {
     String apiKey;
     ProgressDialog progressDialog;
 
+
+    public static FragmentHome newInstance(int sectionNumber) {
+        FragmentHome fragment = new FragmentHome();
+        Bundle args = new Bundle();
+        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Toast.makeText(getActivity(), ARG_SECTION_NUMBER+"", Toast.LENGTH_SHORT).show();
         View view = inflater.inflate(R.layout.fragment_home_layout, container, false);
         apiKey = Constants.user.getApi_key();
         textTitle = view.findViewById(R.id.textTitle);
