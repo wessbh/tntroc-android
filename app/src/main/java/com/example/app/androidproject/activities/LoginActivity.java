@@ -267,5 +267,4 @@ public class LoginActivity extends AppCompatActivity {
         s = sharedPreferences.getString(Constants.API_KEY, null);
         return s;
     }
-
 }
