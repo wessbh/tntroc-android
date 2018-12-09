@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity /*implements TabLayout.OnTab
                         if (drawerItem != null) {
                             Fragment f2 = null;
                             if (drawerItem.getIdentifier() == 1) {
+                                f2 = new FragmentViewPager();
                             }
                             if (drawerItem.getIdentifier() == 2) {
                                 f2 = new FragmentHome();
