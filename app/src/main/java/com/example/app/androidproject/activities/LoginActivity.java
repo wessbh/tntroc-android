@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(input_ip.getText().equals("")){
+                if(input_ip.getText().toString().equals("")){
                     Constants.WEBSERVICE_URL = "http://192.168.1.16";
                 }
                 else{
