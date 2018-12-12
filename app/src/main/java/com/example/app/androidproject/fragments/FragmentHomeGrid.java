@@ -10,13 +10,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -28,6 +25,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.app.androidproject.Entity.Annonce;
 import com.example.app.androidproject.Entity.Constants;
 import com.example.app.androidproject.R;
+import com.example.app.androidproject.activities.MainActivity;
 import com.example.app.androidproject.utils.AnnonceGridAdapter;
 
 import org.json.JSONArray;
@@ -81,10 +79,6 @@ public class FragmentHomeGrid extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        /*lLayout = new GridLayoutManager(getActivity(), 2);
-        recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(lLayout);*/
         jsonParse(root);
 
         return view;
@@ -195,4 +189,5 @@ public class FragmentHomeGrid extends Fragment {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
+
 }

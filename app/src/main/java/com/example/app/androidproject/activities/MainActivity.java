@@ -3,6 +3,7 @@ package com.example.app.androidproject.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,12 +11,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.app.androidproject.Entity.Constants;
 import com.example.app.androidproject.Entity.User;
 import com.example.app.androidproject.R;
+import com.example.app.androidproject.fragments.FragmentAddPost;
 import com.example.app.androidproject.fragments.FragmentHome;
 import com.example.app.androidproject.fragments.FragmentHomeGrid;
 import com.example.app.androidproject.fragments.FragmentViewPager;
@@ -38,8 +42,8 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 public class MainActivity extends AppCompatActivity /*implements TabLayout.OnTabSelectedListener */{
     private static final int PROFILE_SETTING = 100000;
-    private String apikey, full_name;
-
+    private String apikey, full_name, img_url;
+    private FloatingActionButton btn_add;
     private TabLayout tabLayout;
     //This is our viewPager
     private ViewPager viewPager;
@@ -56,8 +60,11 @@ public class MainActivity extends AppCompatActivity /*implements TabLayout.OnTab
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setConstants();
+        img_url = Constants.USER_IMG_PATH+Constants.user.getImage();
         apikey = getAPIKey();
         full_name = getFullName();
+        btn_add = (FloatingActionButton) findViewById(R.id.add_btn);
+        btn_add.setVisibility(View.GONE);
         if (getAPIKey().equals("")){
             Intent intent = new Intent( getApplicationContext(), LoginActivity.class);
             startActivity(intent);
@@ -68,7 +75,6 @@ public class MainActivity extends AppCompatActivity /*implements TabLayout.OnTab
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         final IProfile profile = new ProfileDrawerItem().withName(full_name).withIcon("https://avatars3.githubusercontent.com/u/1476232?v=3&s=460").withIdentifier(100);
 
 
@@ -86,7 +92,7 @@ public class MainActivity extends AppCompatActivity /*implements TabLayout.OnTab
                     public boolean onProfileChanged(View view, IProfile profile, boolean current) {
                         if (profile instanceof IDrawerItem && profile.getIdentifier() == PROFILE_SETTING) {
                             int count = 100 + headerResult.getProfiles().size() + 1;
-                            IProfile newProfile = new ProfileDrawerItem().withNameShown(true).withName("Batman" + count).withEmail("batman" + count + "@gmail.com").withIcon(R.drawable.profile).withIdentifier(count);
+                            IProfile newProfile = new ProfileDrawerItem().withNameShown(true).withName("Batman" + count).withEmail("batman" + count + "@gmail.com").withIcon(img_url).withIdentifier(count);
                             if (headerResult.getProfiles() != null) {
                                 headerResult.addProfile(newProfile, headerResult.getProfiles().size() - 2);
                             } else {
@@ -122,23 +128,32 @@ public class MainActivity extends AppCompatActivity /*implements TabLayout.OnTab
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
 
+                        Fragment f2 = null;
                         if (drawerItem != null) {
-                            Fragment f2 = null;
                             if (drawerItem.getIdentifier() == 1) {
+                                btn_add.setVisibility(View.GONE);
                                 f2 = new FragmentViewPager();
                             }
                             if (drawerItem.getIdentifier() == 2) {
+                                btn_add.setVisibility(View.GONE);
                                 f2 = new FragmentHome();
                             }
                             if (drawerItem.getIdentifier() == 3) {
+                                btn_add.setVisibility(View.VISIBLE);
+                                btn_add.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                       FragmentAddPost fr = new FragmentAddPost();
+                                       changeFragment(fr);
+                                    }
+                                });
                                 f2 = FragmentHomeGrid.newInstance(0, "posts_user/"+Constants.user.getId());
                             }
                             if (drawerItem.getIdentifier() == 21) {
                                 disconnect();
                             }
                             if (f2 != null) {
-                                getSupportFragmentManager().popBackStack();
-                                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, f2).commit();
+                                changeFragment(f2);
                             }
                         }
 
@@ -224,9 +239,6 @@ public class MainActivity extends AppCompatActivity /*implements TabLayout.OnTab
         startActivity(intent);
         finish();
     }
-    public String getApi_key() {
-        return apikey;
-    }
 
     public void setConstants (){
         Gson gson = new Gson();
@@ -235,5 +247,9 @@ public class MainActivity extends AppCompatActivity /*implements TabLayout.OnTab
         User u = gson.fromJson(myStr, User.class);
         Constants.user = u;
     }
+    public void changeFragment(Fragment fragment){
 
+        getSupportFragmentManager().popBackStack();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+    }
 }

@@ -40,23 +40,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
-///////////////////
-
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Base64;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
-//////////////////
 public class RegisterActivity extends AppCompatActivity  {
     ImageView logo;
     EditText input_username,input_last_name, input_name,  input_password, input_reEnterPassword, input_address, input_mobile, input_email;
