@@ -77,7 +77,7 @@ public class FragmentHomeGrid extends Fragment {
        recyclerView = view.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(2), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         jsonParse(root);
 

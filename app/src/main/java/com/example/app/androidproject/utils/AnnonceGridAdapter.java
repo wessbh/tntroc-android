@@ -68,10 +68,10 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
         DisplayMetrics displayMetrics = new DisplayMetrics();
         int width = displayMetrics.widthPixels;
         Picasso.get().load(Constants.ANNONCE_IMG_PATH+annonce.getImg())
-                .error(R.drawable.fb)
-                .placeholder(R.drawable.placeholder)
-                .resize(width, 160)
+                .resize(width, 170)
                 .centerCrop()
+                .error(R.drawable.error_img)
+                .placeholder(R.drawable.placeholder)
                 .into(holder.thumbnail);
 
         holder.overflow.setOnClickListener(new View.OnClickListener() {

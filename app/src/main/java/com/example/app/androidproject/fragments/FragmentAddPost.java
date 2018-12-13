@@ -36,6 +36,9 @@ import com.example.app.androidproject.activities.RegisterActivity;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -164,8 +167,8 @@ public class FragmentAddPost extends Fragment {
         } else {
             input_desc.setError(null);
         }
-        if (input_prix.getText().toString().isEmpty() || input_prix.getText().toString().length() < 3) {
-            input_prix.setError("at least 3 characters");
+        if (input_prix.getText().toString().isEmpty()) {
+            input_prix.setError("champ vide !");
             valid = false;
         } else {
             input_prix.setError(null);
@@ -210,7 +213,7 @@ public class FragmentAddPost extends Fragment {
                 String image = getStringImage(bitmap);
 
                 //Getting Image Name
-                String name = input_titre.getText().toString().trim()+"-img."+image_extension;
+                String name = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+"."+image_extension;
 
                 //Creating parameters
                 Map<String,String> params = new Hashtable<String, String>();
@@ -255,7 +258,7 @@ public class FragmentAddPost extends Fragment {
             @Override
             protected Map<String, String> getParams()
             {
-                String imgName = input_titre.getText().toString().trim()+"-img."+image_extension;
+                String imgName = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+"."+image_extension;
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("title", title);
                 params.put("description", description);

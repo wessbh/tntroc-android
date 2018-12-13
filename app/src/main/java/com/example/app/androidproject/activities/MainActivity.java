@@ -22,6 +22,7 @@ import com.example.app.androidproject.R;
 import com.example.app.androidproject.fragments.FragmentAddPost;
 import com.example.app.androidproject.fragments.FragmentHome;
 import com.example.app.androidproject.fragments.FragmentHomeGrid;
+import com.example.app.androidproject.fragments.FragmentProfile;
 import com.example.app.androidproject.fragments.FragmentViewPager;
 import com.example.app.androidproject.utils.Pager;
 import com.google.gson.Gson;
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity{
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName("Accueil").withIcon(FontAwesome.Icon.faw_tachometer_alt).withIdentifier(1).withSelectable(true),
                         new SectionDrawerItem().withName("Travail").withDivider(true),
-                        new PrimaryDrawerItem().withName("Mon Espace").withIcon(FontAwesome.Icon.faw_user).withIdentifier(2).withSelectable(true),
+                        new PrimaryDrawerItem().withName("Mon Profil").withIcon(FontAwesome.Icon.faw_user).withIdentifier(2).withSelectable(true),
                         new PrimaryDrawerItem().withName("Mes annonces").withIcon(FontAwesome.Icon.faw_clipboard_list).withIdentifier(3).withSelectable(true),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName("Offres").withIcon(FontAwesome.Icon.faw_chalkboard_teacher).withIdentifier(4).withSelectable(true),
@@ -136,7 +137,7 @@ public class MainActivity extends AppCompatActivity{
                             }
                             if (drawerItem.getIdentifier() == 2) {
                                 btn_add.setVisibility(View.GONE);
-                                f2 = new FragmentHome();
+                                f2 = new FragmentProfile();
                             }
                             if (drawerItem.getIdentifier() == 3) {
                                 btn_add.setVisibility(View.VISIBLE);
