@@ -40,7 +40,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 
-public class MainActivity extends AppCompatActivity /*implements TabLayout.OnTabSelectedListener */{
+public class MainActivity extends AppCompatActivity{
     private static final int PROFILE_SETTING = 100000;
     private String apikey, full_name, img_url;
     private FloatingActionButton btn_add;
@@ -251,5 +251,11 @@ public class MainActivity extends AppCompatActivity /*implements TabLayout.OnTab
 
         getSupportFragmentManager().popBackStack();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_container);
+        fragment.onActivityResult(requestCode, resultCode, data);
     }
 }

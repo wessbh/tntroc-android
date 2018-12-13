@@ -3,6 +3,7 @@ package com.example.app.androidproject.utils;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,8 +51,12 @@ public class AnnonceListAdapter extends RecyclerView.Adapter<AnnonceListAdapter.
         Annonce annonce = annoncesList.get(position);
         String strPoste = annonce.getTitle();
         Context context = holder.img.getContext();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        int width = displayMetrics.widthPixels;
         Picasso.get().load(Constants.ANNONCE_IMG_PATH+annonce.getImg())
                 .error(R.drawable.fb)
+                .resize(450, 400)
+                .centerCrop()
                 .placeholder(R.drawable.placeholder)
                 .into(holder.img);
         //Picasso.get().load(Constants.ANNONCE_IMG_PATH+annonce.getImg()).into(holder.img);

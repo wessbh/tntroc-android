@@ -3,6 +3,7 @@ package com.example.app.androidproject.utils;
 import android.content.Context;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -64,9 +65,13 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
 
         // loading album cover using Glide library
        // Glide.with(mContext).load(annonce.getImg()).into(holder.thumbnail);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        int width = displayMetrics.widthPixels;
         Picasso.get().load(Constants.ANNONCE_IMG_PATH+annonce.getImg())
                 .error(R.drawable.fb)
                 .placeholder(R.drawable.placeholder)
+                .resize(width, 160)
+                .centerCrop()
                 .into(holder.thumbnail);
 
         holder.overflow.setOnClickListener(new View.OnClickListener() {

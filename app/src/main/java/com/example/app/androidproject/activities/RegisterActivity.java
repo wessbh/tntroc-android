@@ -234,7 +234,7 @@ public class RegisterActivity extends AppCompatActivity  {
         date_field.setText(sdf.format(myCalendar.getTime()));
     }
 
-    public void registerRequest (final String username, final String name , final String lastname, final String adress, final String dateNiss, final String email, final String numtel, final String password      ){
+    public void registerRequest (final String username, final String name , final String lastname, final String adress, final String dateNiss, final String email, final String numtel, final String password ){
         String url =  Constants.WEBSERVICE_URL+"/mdw/v1/register";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
@@ -283,8 +283,6 @@ public class RegisterActivity extends AppCompatActivity  {
     }
 
     private void uploadImage(){
-        //Showing the progress dialog
-
         final ProgressDialog loading = ProgressDialog.show(this,"Uploading...","Please wait...",false,false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
                 new Response.Listener<String>() {
