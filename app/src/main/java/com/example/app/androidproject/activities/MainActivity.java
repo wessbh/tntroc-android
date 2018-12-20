@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity{
     public void changeFragment(Fragment fragment){
 
         getSupportFragmentManager().popBackStack();
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).addToBackStack("fromMain").commit();
     }
 
     @Override

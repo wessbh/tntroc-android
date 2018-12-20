@@ -1,6 +1,11 @@
 package com.example.app.androidproject.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -16,6 +21,10 @@ import android.widget.Toast;
 import com.example.app.androidproject.Entity.Annonce;
 import com.example.app.androidproject.Entity.Constants;
 import com.example.app.androidproject.R;
+import com.example.app.androidproject.activities.LoginActivity;
+import com.example.app.androidproject.activities.MainActivity;
+import com.example.app.androidproject.fragments.FragmentDetails;
+import com.example.app.androidproject.fragments.FragmentProfile;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -27,7 +36,8 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
 
     private Context mContext;
     private List<Annonce> annonceList;
-
+    private int id;
+    private OnItemClickListener listener;
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, categorie, prix;
         public ImageView thumbnail, overflow;
@@ -58,11 +68,16 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        Annonce annonce = annonceList.get(position);
+        final Annonce annonce = annonceList.get(position);
         holder.title.setText(annonce.getTitle());
         holder.categorie.setText(annonce.getCategorie());
         holder.prix.setText(annonce.getPrix()+" Dt");
-
+        holder.title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                id = annonce.getId();
+            }
+        });
         // loading album cover using Glide library
        // Glide.with(mContext).load(annonce.getImg()).into(holder.thumbnail);
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -73,7 +88,16 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
                 .error(R.drawable.error_img)
                 .placeholder(R.drawable.placeholder)
                 .into(holder.thumbnail);
-
+        holder.title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new FragmentDetails();
+                changeFragment(fragment);
+                Bundle args = new Bundle();
+                args.putInt("postID", annonce.getId());
+                fragment.setArguments(args);
+            }
+        });
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,8 +141,21 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
         }
     }
 
+    public Annonce getUser(int position){
+        return this.annonceList.get(position);
+    }
     @Override
     public int getItemCount() {
         return annonceList.size();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void changeFragment(Fragment fragment){
+        MainActivity myact = (MainActivity) mContext;
+        myact.getSupportFragmentManager().popBackStack();
+        myact.getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).addToBackStack("toGrid").commit();
     }
 }
