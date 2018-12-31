@@ -25,7 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.app.androidproject.Entity.Annonce;
-import com.example.app.androidproject.Entity.Constants;
+import com.example.app.androidproject.utils.Constants;
 import com.example.app.androidproject.activities.LoginActivity;
 import com.example.app.androidproject.R;
 import com.example.app.androidproject.utils.*;

@@ -18,17 +18,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.app.androidproject.Entity.Annonce;
-import com.example.app.androidproject.Entity.Constants;
+import com.example.app.androidproject.utils.Constants;
 import com.example.app.androidproject.R;
-import com.example.app.androidproject.utils.AnnonceGridAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

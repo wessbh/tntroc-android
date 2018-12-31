@@ -7,15 +7,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -24,11 +20,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.app.androidproject.Entity.Annonce;
-import com.example.app.androidproject.Entity.Constants;
+import com.example.app.androidproject.utils.Constants;
 import com.example.app.androidproject.R;
-import com.example.app.androidproject.utils.AnnonceListAdapter;
-import com.example.app.androidproject.utils.Pager;
 
 import org.json.JSONArray;
 import org.json.JSONException;

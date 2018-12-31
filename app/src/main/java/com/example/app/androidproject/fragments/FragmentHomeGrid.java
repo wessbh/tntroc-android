@@ -10,12 +10,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -25,11 +23,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.app.androidproject.Entity.Annonce;
-import com.example.app.androidproject.Entity.Constants;
+import com.example.app.androidproject.utils.Constants;
 import com.example.app.androidproject.R;
-import com.example.app.androidproject.activities.MainActivity;
 import com.example.app.androidproject.utils.AnnonceGridAdapter;
-import com.example.app.androidproject.utils.ItemClickSupport;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,7 +46,6 @@ public class FragmentHomeGrid extends Fragment {
     private List<Annonce> annoncesList = new ArrayList<>();
     private RequestQueue mQueue;
     ProgressDialog progressDialog;
-    private GridLayoutManager lLayout;
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String ROOT = "ROOTING";
     private int sectionNumber;
@@ -194,15 +189,5 @@ public class FragmentHomeGrid extends Fragment {
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 
-    private void configureOnClickRecyclerView(){
-        ItemClickSupport.addTo(recyclerView, R.layout.fragment_home_grid)
-                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Annonce annonce = adapter.getUser(position);
-                        Toast.makeText(getContext(), "You clicked on post : "+annonce.getTitle(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
 
 }

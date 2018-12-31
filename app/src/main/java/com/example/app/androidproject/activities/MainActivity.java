@@ -11,20 +11,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
-import com.example.app.androidproject.Entity.Constants;
+import com.example.app.androidproject.utils.Constants;
 import com.example.app.androidproject.Entity.User;
 import com.example.app.androidproject.R;
 import com.example.app.androidproject.fragments.FragmentAddPost;
-import com.example.app.androidproject.fragments.FragmentHome;
 import com.example.app.androidproject.fragments.FragmentHomeGrid;
 import com.example.app.androidproject.fragments.FragmentProfile;
 import com.example.app.androidproject.fragments.FragmentViewPager;
-import com.example.app.androidproject.utils.Pager;
 import com.google.gson.Gson;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
@@ -43,6 +38,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 public class MainActivity extends AppCompatActivity{
     private static final int PROFILE_SETTING = 100000;
+    public static final int RC_PHOTO_PICKER_PERM = 123;
     private String apikey, full_name, img_url;
     private FloatingActionButton btn_add;
     private TabLayout tabLayout;
@@ -145,7 +141,8 @@ public class MainActivity extends AppCompatActivity{
                                     @Override
                                     public void onClick(View v) {
                                        FragmentAddPost fr = new FragmentAddPost();
-                                       changeFragment(fr);
+                                        getSupportFragmentManager().popBackStack();
+                                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fr,"AddPostFragment").addToBackStack("fromMain").commit();
                                     }
                                 });
                                 f2 = FragmentHomeGrid.newInstance(0, "posts_user/"+Constants.user.getId());
@@ -254,9 +251,9 @@ public class MainActivity extends AppCompatActivity{
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).addToBackStack("fromMain").commit();
     }
 
-    @Override
+/*    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_container);
         fragment.onActivityResult(requestCode, resultCode, data);
-    }
+    }*/
 }

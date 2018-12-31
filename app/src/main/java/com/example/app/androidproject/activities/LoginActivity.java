@@ -9,7 +9,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.app.androidproject.Entity.Constants;
+import com.example.app.androidproject.utils.Constants;
 import com.example.app.androidproject.Entity.User;
 import com.example.app.androidproject.R;
 
@@ -32,9 +32,7 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -183,7 +181,6 @@ public class LoginActivity extends AppCompatActivity {
                 {
                     @Override
                     public void onResponse(String response) {
-                        String respApi;
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             user.setId(Integer.valueOf(jsonObject.get("id").toString()));

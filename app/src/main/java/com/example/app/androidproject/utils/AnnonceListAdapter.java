@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.app.androidproject.Entity.Annonce;
-import com.example.app.androidproject.Entity.Constants;
 import com.example.app.androidproject.R;
 import com.squareup.picasso.Picasso;
 import java.util.List;

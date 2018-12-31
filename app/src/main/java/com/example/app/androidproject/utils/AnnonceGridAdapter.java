@@ -1,11 +1,8 @@
 package com.example.app.androidproject.utils;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -19,12 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.app.androidproject.Entity.Annonce;
-import com.example.app.androidproject.Entity.Constants;
 import com.example.app.androidproject.R;
-import com.example.app.androidproject.activities.LoginActivity;
 import com.example.app.androidproject.activities.MainActivity;
 import com.example.app.androidproject.fragments.FragmentDetails;
-import com.example.app.androidproject.fragments.FragmentProfile;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -37,7 +31,6 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
     private Context mContext;
     private List<Annonce> annonceList;
     private int id;
-    private OnItemClickListener listener;
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, categorie, prix;
         public ImageView thumbnail, overflow;

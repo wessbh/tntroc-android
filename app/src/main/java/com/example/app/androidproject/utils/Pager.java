@@ -1,13 +1,9 @@
 package com.example.app.androidproject.utils;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.widget.Toast;
 
-import com.example.app.androidproject.Entity.Constants;
 import com.example.app.androidproject.fragments.FragmentHome;
 import com.example.app.androidproject.fragments.FragmentHomeGrid;
 
