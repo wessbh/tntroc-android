@@ -7,12 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.example.app.androidproject.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentAnnonce extends Fragment {
+public class FragmentAnnonce extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
 
 
     public FragmentAnnonce() {
@@ -27,4 +29,23 @@ public class FragmentAnnonce extends Fragment {
         return inflater.inflate(R.layout.fragment_annonce, container, false);
     }
 
+    @Override
+    public void onSliderClick(BaseSliderView slider) {
+
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 }

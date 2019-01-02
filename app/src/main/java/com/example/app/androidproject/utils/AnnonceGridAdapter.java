@@ -1,5 +1,6 @@
 package com.example.app.androidproject.utils;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,13 +16,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.app.androidproject.Entity.Annonce;
 import com.example.app.androidproject.R;
 import com.example.app.androidproject.activities.MainActivity;
 import com.example.app.androidproject.fragments.FragmentDetails;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Ravi Tamada on 18/05/16.
@@ -29,6 +44,7 @@ import java.util.List;
 public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.MyViewHolder> {
 
     private Context mContext;
+    private RequestQueue mQueue;
     private List<Annonce> annonceList;
     private int id;
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -84,10 +100,16 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MainActivity myact = (MainActivity) mContext;
+                mQueue = Volley.newRequestQueue(myact.getApplicationContext());
                 Fragment fragment = new FragmentDetails();
+                ArrayList<String> myList = new ArrayList<>();
+                jsonParse(annonce.getId(), myList);
                 changeFragment(fragment);
                 Bundle args = new Bundle();
                 args.putInt("postID", annonce.getId());
+                args.putStringArrayList("list", myList);
+
                 fragment.setArguments(args);
             }
         });
@@ -150,5 +172,46 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
         MainActivity myact = (MainActivity) mContext;
         myact.getSupportFragmentManager().popBackStack();
         myact.getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).addToBackStack("toGrid").commit();
+    }
+
+    public void jsonParse(int id, final ArrayList<String> imageList) {
+
+        final String url =  Constants.WEBSERVICE_URL+"/mdw/v1/post_image/"+id;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+
+                            JSONArray jsonArray = response.getJSONArray("post");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject post = jsonArray.getJSONObject(i);
+                                String img = post.getString("image");
+                                imageList.add(img);
+                            }
+                            // progressBar.setVisibility(View.GONE);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }){
+
+            /**
+             * Passing some request headers
+             */
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", Constants.user.getApi_key());
+                return headers;
+            }
+        };
+        mQueue.add(request);
     }
 }

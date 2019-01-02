@@ -130,18 +130,15 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }).executeAsync();
             }
-
             @Override
             public void onCancel() {
                 // App code
             }
-
             @Override
             public void onError(FacebookException exception) {
                 // App code
             }
         });
-
         if(AccessToken.getCurrentAccessToken() != null){
             email = AccessToken.getCurrentAccessToken().getUserId();
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -210,8 +207,8 @@ public class LoginActivity extends AppCompatActivity {
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // error
-                        Toast.makeText(getApplication(),error+"", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplication(),"Error ", Toast.LENGTH_SHORT).show();
                     }
                 }
         ) {
