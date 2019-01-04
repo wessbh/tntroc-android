@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.app.androidproject.Entity.Annonce;
+import com.example.app.androidproject.activities.MainActivity;
 import com.example.app.androidproject.utils.Constants;
 import com.example.app.androidproject.R;
 import com.example.app.androidproject.utils.AnnonceGridAdapter;
@@ -50,9 +52,11 @@ public class FragmentHomeGrid extends Fragment {
     private static final String ROOT = "ROOTING";
     private int sectionNumber;
     private String root;
+    private FragmentManager fm;
     public static String TAG = "FragmentHomeGrid";
 
     public FragmentHomeGrid() {
+        this.setRetainInstance(true);
     }
 
 
@@ -62,6 +66,7 @@ public class FragmentHomeGrid extends Fragment {
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         args.putString(ROOT, root);
         fragment.setArguments(args);
+        fragment.setRetainInstance(true);
         return fragment;
     }
     @Override
@@ -69,7 +74,16 @@ public class FragmentHomeGrid extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_grid, container, false);
         add = view.findViewById(R.id.add_btn);
-
+        final MainActivity myAct = (MainActivity) getActivity();
+        fm = myAct.getSupportFragmentManager();
+        add = myAct.getBtn_add();
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentAddPost fr = new FragmentAddPost();
+                fm.beginTransaction().replace(R.id.frame_container, fr).addToBackStack(null).commit();
+            }
+        });
         sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
         root = getArguments().getString(ROOT);
         mQueue = Volley.newRequestQueue(getContext());
@@ -188,6 +202,4 @@ public class FragmentHomeGrid extends Fragment {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
-
-
 }

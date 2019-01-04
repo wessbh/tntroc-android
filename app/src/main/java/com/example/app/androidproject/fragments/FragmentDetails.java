@@ -53,6 +53,7 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
     private static ViewPager mPager;
     private static int currentPage = 0;
     public static String TAG = "FragmentDetails";
+    private TextView titre_value, prix_value;
     public FragmentDetails() {
         // Required empty public constructor
     }
@@ -65,6 +66,8 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
         final View view = inflater.inflate(R.layout.fragment_annonce, container, false);
         mQueue = Volley.newRequestQueue(getContext());
         id = getArguments().getInt("postID");
+        titre_value = (TextView) view.findViewById(R.id.titre_value);
+        prix_value = (TextView) view.findViewById(R.id.prix_value);
         getImageList(id, new CallBack() {
             @Override
             public void onSuccess(ArrayList<String> imageList) {
@@ -113,6 +116,8 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
                                 myAnnonce.setPrix(Integer.valueOf(prix));
                                 annonce = myAnnonce;
                             }
+                            titre_value.setText(annonce.getTitle());
+                            prix_value.setText(String.valueOf(annonce.getPrix()));
                             progressDialog.dismiss();
                             // progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {

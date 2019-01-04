@@ -97,6 +97,7 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
                 .error(R.drawable.error_img)
                 .placeholder(R.drawable.placeholder)
                 .into(holder.thumbnail);
+
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

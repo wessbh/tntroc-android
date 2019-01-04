@@ -43,7 +43,6 @@ public class FragmentViewPager extends Fragment {
     private ViewPager viewPager;
     TabLayout tabLayout;
     public FragmentViewPager() {
-        // Required empty public constructor
     }
 
 
@@ -114,7 +113,7 @@ public class FragmentViewPager extends Fragment {
                     return new FragmentHomeGrid();
 
                 default:
-                    return null;
+                    return FragmentHomeGrid.newInstance(0,"all_posts");
             }
         }
        @Override
@@ -134,7 +133,6 @@ public class FragmentViewPager extends Fragment {
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Retrieving data...");
-
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override

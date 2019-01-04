@@ -7,11 +7,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.app.androidproject.utils.Constants;
 import com.example.app.androidproject.Entity.User;
@@ -36,11 +38,13 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements  FragmentManager.OnBackStackChangedListener{
     private static final int PROFILE_SETTING = 100000;
     public static final int RC_PHOTO_PICKER_PERM = 123;
     private String apikey, full_name, img_url;
     private FloatingActionButton btn_add;
+    private int confirmation = 0;
+    private FragmentManager fm;
     private TabLayout tabLayout;
     //This is our viewPager
     private ViewPager viewPager;
@@ -57,6 +61,7 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setConstants();
+        fm = getSupportFragmentManager();
         img_url = Constants.USER_IMG_PATH+Constants.user.getImage();
         apikey = getAPIKey();
         full_name = getFullName();
@@ -67,15 +72,13 @@ public class MainActivity extends AppCompatActivity{
             startActivity(intent);
             finish();
         }
-        getSupportFragmentManager().popBackStack();
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new FragmentViewPager()).commit();
-
+        FragmentViewPager fragmentViewPager = new FragmentViewPager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.frame_container, fragmentViewPager).commit();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final IProfile profile = new ProfileDrawerItem().withName(full_name).withIcon("https://avatars3.githubusercontent.com/u/1476232?v=3&s=460").withIdentifier(100);
-
-
-        // Create the AccountHeader
+         // Create the AccountHeader
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withTranslucentStatusBar(true)
@@ -140,9 +143,9 @@ public class MainActivity extends AppCompatActivity{
                                 btn_add.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                       FragmentAddPost fr = new FragmentAddPost();
-                                        getSupportFragmentManager().popBackStack();
-                                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fr,"AddPostFragment").addToBackStack("fromMain").commit();
+//                                       FragmentAddPost fr = new FragmentAddPost();
+//                                        fm.popBackStack();
+//                                        fm.beginTransaction().replace(R.id.frame_container, fr,"AddPostFragment").addToBackStack(null).commit();
                                     }
                                 });
                                 f2 = FragmentHomeGrid.newInstance(0, "posts_user/"+Constants.user.getId());
@@ -150,9 +153,15 @@ public class MainActivity extends AppCompatActivity{
                             if (drawerItem.getIdentifier() == 21) {
                                 disconnect();
                             }
-                            if (f2 != null) {
+                            if ((f2 != null)) {
                                 changeFragment(f2);
                             }
+                            if (f2 instanceof FragmentViewPager) {
+                                Intent intent = getIntent();
+                                changeIntent(intent);
+
+                            }
+
                         }
 
                         return false;
@@ -169,17 +178,20 @@ public class MainActivity extends AppCompatActivity{
                     }
                 })
                 .build();
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+        fm.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                int bsEntry = fm.getBackStackEntryCount() ;
+                if (bsEntry  > 0) {
                     //change to back arrow
+                    Toast.makeText(MainActivity.this, ""+bsEntry, Toast.LENGTH_SHORT).show();
                     result.getActionBarDrawerToggle().setDrawerIndicatorEnabled(false);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
                 } else {
                     //change to hamburger icon
-
+                    Intent intent = getIntent();
+                    changeIntent(intent);
                     result.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                     result.getActionBarDrawerToggle().syncState();
@@ -208,11 +220,20 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public void onBackPressed() {
         //handle the back press :D close the drawer first and if the drawer is closed close the activity
+        int fragments = getFragmentManager().getBackStackEntryCount();
         if (result != null && result.isDrawerOpen()) {
             result.closeDrawer();
         } else {
             super.onBackPressed();
         }
+//        if((fragments == 0)&& (confirmation == 0)){
+//            Toast.makeText(MainActivity.this, "Cliquer une autre fois pour quitter"+confirmation ,Toast.LENGTH_SHORT).show();
+//            confirmation++;
+//        }
+//        else if((fragments == 0)&& (confirmation == 1)){
+//            Toast.makeText(MainActivity.this, "Cliquer une autre fois pour quitter"+confirmation ,Toast.LENGTH_SHORT).show();
+//            MainActivity.this.finish();
+//        }
     }
     public String getAPIKey (){
         String s;
@@ -247,13 +268,30 @@ public class MainActivity extends AppCompatActivity{
     }
     public void changeFragment(Fragment fragment){
 
-        getSupportFragmentManager().popBackStack();
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).addToBackStack("fromMain").commit();
+       FragmentTransaction transaction =fm.beginTransaction();
+       transaction.replace(R.id.frame_container, fragment);
+       transaction.addToBackStack(null);
+       transaction.commit();
     }
 
+    @Override
+    public void onBackStackChanged() {
+
+
+    }
+    public void changeIntent (Intent intent){
+        startActivity(intent);
+        this.finish();
+        this.overridePendingTransition(0, 0);
+    }
 /*    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_container);
         fragment.onActivityResult(requestCode, resultCode, data);
     }*/
+
+    public FloatingActionButton getBtn_add() {
+        return btn_add;
+    }
+
 }
