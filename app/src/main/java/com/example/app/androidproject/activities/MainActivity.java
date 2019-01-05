@@ -1,20 +1,25 @@
 package com.example.app.androidproject.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.app.androidproject.fragments.FragmentNetworkProblem;
 import com.example.app.androidproject.utils.Constants;
 import com.example.app.androidproject.Entity.User;
 import com.example.app.androidproject.R;
@@ -72,9 +77,18 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
             startActivity(intent);
             finish();
         }
-        FragmentViewPager fragmentViewPager = new FragmentViewPager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.frame_container, fragmentViewPager).commit();
+        if (isOnline()){
+
+            FragmentViewPager fragmentViewPager = new FragmentViewPager();
+            FragmentTransaction transaction = fm.beginTransaction();
+            transaction.replace(R.id.frame_container, fragmentViewPager).commit();
+        }
+        else{
+            showDialog(this, "Oops !","Pas de connexion réseau !" );
+            FragmentNetworkProblem fragment = new FragmentNetworkProblem();
+            FragmentTransaction transaction = fm.beginTransaction();
+            transaction.replace(R.id.frame_container, fragment).commit();
+        }
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final IProfile profile = new ProfileDrawerItem().withName(full_name).withIcon("https://avatars3.githubusercontent.com/u/1476232?v=3&s=460").withIdentifier(100);
@@ -153,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
                             if (drawerItem.getIdentifier() == 21) {
                                 disconnect();
                             }
-                            if ((f2 != null)) {
+                            if (((f2 != null) && isOnline())) {
                                 changeFragment(f2);
                             }
                             if (f2 instanceof FragmentViewPager) {
@@ -184,7 +198,6 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
                 int bsEntry = fm.getBackStackEntryCount() ;
                 if (bsEntry  > 0) {
                     //change to back arrow
-                    Toast.makeText(MainActivity.this, ""+bsEntry, Toast.LENGTH_SHORT).show();
                     result.getActionBarDrawerToggle().setDrawerIndicatorEnabled(false);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -294,4 +307,22 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
         return btn_add;
     }
 
+    protected boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public void showDialog(Activity activity, String title, CharSequence message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        if (title != null) builder.setTitle(title);
+
+        builder.setMessage(message);
+        builder.setPositiveButton("OK", null);
+        builder.show();
+    }
 }
