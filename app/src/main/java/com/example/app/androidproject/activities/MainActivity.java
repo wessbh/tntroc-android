@@ -289,7 +289,6 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
 
     @Override
     public void onBackStackChanged() {
-    //oookokkey
 
     }
     public void changeIntent (Intent intent){
