@@ -297,12 +297,6 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
         this.finish();
         this.overridePendingTransition(0, 0);
     }
-/*    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_container);
-        fragment.onActivityResult(requestCode, resultCode, data);
-    }*/
-
     public FloatingActionButton getBtn_add() {
         return btn_add;
     }

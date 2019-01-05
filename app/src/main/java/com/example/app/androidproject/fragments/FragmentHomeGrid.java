@@ -151,7 +151,6 @@ public class FragmentHomeGrid extends Fragment {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
-                //headers.put("Content-Type", "application/json");
                 headers.put("Authorization", Constants.user.getApi_key());
                 return headers;
             }
