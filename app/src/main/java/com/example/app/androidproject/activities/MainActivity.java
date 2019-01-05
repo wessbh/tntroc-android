@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
 
     @Override
     public void onBackStackChanged() {
-
+//
     }
     public void changeIntent (Intent intent){
         startActivity(intent);
