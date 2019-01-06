@@ -44,8 +44,6 @@ public class MyAdapter extends PagerAdapter {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         int width = displayMetrics.widthPixels;
         Picasso.get().load(Constants.ANNONCE_IMG_PATH+images.get(position))
-                .resize(width, 170)
-                .centerCrop()
                 .error(R.drawable.error_img)
                 .placeholder(R.drawable.placeholder)
                 .into(myImage);

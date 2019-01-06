@@ -33,6 +33,8 @@ import com.example.app.androidproject.utils.MyAdapter;
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
 import com.github.aakira.expandablelayout.ExpandableWeightLayout;
 
+import net.cachapa.expandablelayout.ExpandableLayout;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +49,7 @@ import me.relex.circleindicator.CircleIndicator;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentDetails extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener{
+public class FragmentDetails extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, View.OnClickListener,  ExpandableLayout.OnExpansionUpdateListener{
     private int id;
     private ArrayList<String> imgList = new ArrayList<>();
     private RequestQueue mQueue;
@@ -59,7 +61,7 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
     private TextView titre_value, prix_value, description_label, description_value;
     ImageView arrow;
     Boolean expanded;
-    ExpandableLinearLayout  expandableLayout;
+    ExpandableLayout expandableLayout;
 
     public FragmentDetails() {
         // Required empty public constructor
@@ -80,26 +82,11 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
         prix_value = (TextView) view.findViewById(R.id.prix_value);
         expandableLayout= view.findViewById(R.id.expandableLayout);
         arrow = (ImageView) view.findViewById(R.id.arrow);
-        arrow.setRotation(-180);
         //--------------------------------------------------------------\\
 
-
-        description_label.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                expandableLayout.toggle();
-
-                if(expandableLayout.isExpanded()){
-                    arrow.setRotation(180);
-                    Toast.makeText(getActivity(), "Expanded", Toast.LENGTH_SHORT).show();
-
-                }
-                if(!expandableLayout.isExpanded())
-                    arrow.setRotation(-180);
-                Toast.makeText(getActivity(), "Not Expanded", Toast.LENGTH_SHORT).show();
-
-            }
-        });
+        description_label.setOnClickListener(this);
+        expandableLayout.setOnExpansionUpdateListener(this);
+        arrow.setOnClickListener(this);
         getImageList(id, new CallBack() {
             @Override
             public void onSuccess(ArrayList<String> imageList) {
@@ -239,6 +226,17 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @Override
+    public void onExpansionUpdate(float expansionFraction, int state) {
+
+        arrow.setRotation(expansionFraction * 180);
+    }
+
+    @Override
+    public void onClick(View v) {
+        expandableLayout.toggle();
     }
 
     public interface CallBack {
