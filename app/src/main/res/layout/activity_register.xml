@@ -103,7 +103,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Date"
-                android:textSize="10dp"/>
+                android:textColor="@color/white"
+                android:background="@color/colorPrimaryDark"
+                android:textSize="10sp"/>
         </LinearLayout>
         <!--  Email Label -->
         <android.support.design.widget.TextInputLayout
@@ -186,10 +188,11 @@
                 android:id="@+id/upload_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/cardview_shadow_start_color"
                 android:text="upload image"
+                android:padding="5dp"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:textColor="@color/black" />
+                android:textColor="@color/white"
+                android:background="@color/colorPrimaryDark"/>
 
         </LinearLayout>
         <!-- Signup Button -->
@@ -199,7 +202,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:layout_marginTop="24dp"
-            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimaryDark"
             android:padding="12dp"
             android:text="@string/create_account" />
 

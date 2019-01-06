@@ -23,6 +23,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.app.androidproject.Entity.Annonce;
 import com.example.app.androidproject.R;
 import com.example.app.androidproject.activities.MainActivity;
@@ -85,6 +87,7 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
             @Override
             public void onClick(View v) {
                 id = annonce.getId();
+
             }
         });
         // loading album cover using Glide library
@@ -97,21 +100,28 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
                 .error(R.drawable.error_img)
                 .placeholder(R.drawable.placeholder)
                 .into(holder.thumbnail);
-
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity myact = (MainActivity) mContext;
-                mQueue = Volley.newRequestQueue(myact.getApplicationContext());
-                Fragment fragment = new FragmentDetails();
-                ArrayList<String> myList = new ArrayList<>();
-                jsonParse(annonce.getId(), myList);
-                changeFragment(fragment);
-                Bundle args = new Bundle();
-                args.putInt("postID", annonce.getId());
-                args.putStringArrayList("list", myList);
-
-                fragment.setArguments(args);
+                toDetails(annonce);
+            }
+        });
+        holder.categorie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toDetails(annonce);
+            }
+        });
+        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toDetails(annonce);
+            }
+        });
+        holder.prix.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toDetails(annonce);
             }
         });
         holder.overflow.setOnClickListener(new View.OnClickListener() {
@@ -214,5 +224,19 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
             }
         };
         mQueue.add(request);
+    }
+    public void toDetails(Annonce annonce){
+
+        MainActivity myact = (MainActivity) mContext;
+        mQueue = Volley.newRequestQueue(myact.getApplicationContext());
+        Fragment fragment = new FragmentDetails();
+        ArrayList<String> myList = new ArrayList<>();
+        jsonParse(annonce.getId(), myList);
+        changeFragment(fragment);
+        Bundle args = new Bundle();
+        args.putInt("postID", annonce.getId());
+        args.putStringArrayList("list", myList);
+
+        fragment.setArguments(args);
     }
 }

@@ -2,10 +2,16 @@ package com.example.app.androidproject.fragments;
 
 
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,17 +27,22 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.example.app.androidproject.Entity.Annonce;
+import com.example.app.androidproject.Entity.User;
 import com.example.app.androidproject.activities.MainActivity;
 import com.example.app.androidproject.utils.Constants;
 import com.example.app.androidproject.R;
 import com.example.app.androidproject.utils.MyAdapter;
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
 import com.github.aakira.expandablelayout.ExpandableWeightLayout;
+import com.squareup.picasso.Picasso;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -58,11 +69,13 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
     private static ViewPager mPager;
     private static int currentPage = 0;
     public static String TAG = "FragmentDetails";
-    private TextView titre_value, prix_value, description_label, description_value;
-    ImageView arrow;
+    private TextView titre_value, prix_value, description_label, description_value, username;
+    ImageView arrow, imageView_profile;
     Boolean expanded;
     ExpandableLayout expandableLayout;
+    User user;
 
+    Toolbar toolbar;
     public FragmentDetails() {
         // Required empty public constructor
     }
@@ -75,6 +88,9 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
         mQueue = Volley.newRequestQueue(getContext());
         expanded = false;
         //--------------- LAYOUT COMPONENTS----------------------------\\
+
+        toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Détails");
         id = getArguments().getInt("postID");
         titre_value = (TextView) view.findViewById(R.id.titre_value);
         description_label = (TextView) view.findViewById(R.id.description);
@@ -82,6 +98,9 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
         prix_value = (TextView) view.findViewById(R.id.prix_value);
         expandableLayout= view.findViewById(R.id.expandableLayout);
         arrow = (ImageView) view.findViewById(R.id.arrow);
+        imageView_profile = (ImageView) view.findViewById(R.id.imageView_profile);
+        username = (TextView) view.findViewById(R.id.username);
+
         //--------------------------------------------------------------\\
 
         description_label.setOnClickListener(this);
@@ -123,6 +142,7 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
                                 String desc = post.getString("description");
                                 String strDate = post.getString("created_at");
                                 String img = post.getString("img");
+                                int userId = post.getInt("user_id");
                                 String categorie = post.getString("categorie");
                                 String prix = post.getString("prix");
                                 Annonce myAnnonce = new Annonce();
@@ -131,13 +151,81 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
                                 myAnnonce.setDescription(desc);
                                 myAnnonce.setCreated_at(strDate);
                                 myAnnonce.setImg(img);
+                                myAnnonce.setUser_id(userId);
                                 myAnnonce.setCategorie(categorie);
                                 myAnnonce.setPrix(Integer.valueOf(prix));
                                 annonce = myAnnonce;
                             }
+                            getUser(annonce.getUser_id());
                             titre_value.setText(annonce.getTitle());
                             prix_value.setText(String.valueOf(annonce.getPrix()));
                             description_value.setText(annonce.getDescription());
+                            progressDialog.dismiss();
+                            // progressBar.setVisibility(View.GONE);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }){
+
+            /**
+             * Passing some request headers
+             */
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", Constants.user.getApi_key());
+                return headers;
+            }
+        };
+        mQueue.add(request);
+    }
+
+
+    public void getUser(int id) {
+        final String url =  Constants.WEBSERVICE_URL+"/mdw/v1/user_by_id/"+id;
+        progressDialog = new ProgressDialog(getContext(),
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Retrieving data...");
+        user = new User();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+
+                            JSONArray jsonArray = response.getJSONArray("user");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject user_json = jsonArray.getJSONObject(i);
+                                user.setId(Integer.valueOf(user_json.get("id").toString()));
+                                user.setUsername(user_json.get("username").toString());
+                                user.setName(user_json.get("name").toString());
+                                user.setLast_name(user_json.get("last_name").toString());
+                                user.setEmail(user_json.get("email").toString());
+                                user.setNumtel(user_json.get("num_tel").toString());
+                                user.setAdresse(user_json.get("adresse").toString());
+                                user.setDate_naissance(user_json.get("date_naissance").toString());
+                                user.setApi_key(user_json.get("apiKey").toString());
+                                user.setImage(user_json.get("image").toString());
+                                user.setLast_login(user_json.get("last_login").toString());
+                            }
+                            username.setText(user.getLast_name()+" "+user.getName());
+//                            Picasso.get().load(Constants.USER_IMG_PATH+user.getImage())
+//                                    .resize(300,200)
+//                                    .centerCrop()
+//                                    .error(R.drawable.error_img)
+//                                    .placeholder(R.drawable.placeholder)
+//                                    .into(imageView_profile);
+                            Glide.with(getActivity())
+                                    .load(Constants.USER_IMG_PATH+user.getImage())
+                                    .apply(new RequestOptions().override(400, 300))
+                                    .into(imageView_profile);
                             progressDialog.dismiss();
                             // progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {

@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class FragmentViewPager extends Fragment {
     ProgressDialog progressDialog;
     private ViewPager viewPager;
     TabLayout tabLayout;
+    Toolbar toolbar;
     public FragmentViewPager() {
     }
 
@@ -51,6 +53,8 @@ public class FragmentViewPager extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_pager, container, false);
 
+        toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Accueil");
         mQueue = Volley.newRequestQueue(getContext());
         jsonParse();
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);

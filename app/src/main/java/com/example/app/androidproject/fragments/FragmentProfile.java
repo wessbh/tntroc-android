@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.support.v7.widget.Toolbar;
 
 import com.example.app.androidproject.utils.Constants;
 import com.example.app.androidproject.R;
@@ -22,7 +23,7 @@ public class FragmentProfile extends Fragment {
     EditText nom, lieu,propos,email, phone;
     Button btn_editer;
     ImageView img;
-
+    Toolbar toolbar;
     public FragmentProfile() {
         // Required empty public constructor
     }
@@ -32,6 +33,7 @@ public class FragmentProfile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
         img = view.findViewById(R.id.imageView_profile);
         Picasso.get().load(Constants.USER_IMG_PATH+Constants.user.getImage())
                 .resize(100,100)
@@ -39,6 +41,8 @@ public class FragmentProfile extends Fragment {
                 .error(R.drawable.error_img)
                 .placeholder(R.drawable.placeholder)
                 .into(img);
+        toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Profile");
         nom = view.findViewById(R.id.name);
         nom.setText(Constants.user.getName()+" "+Constants.user.getLast_name());
         nom.setEnabled(false);

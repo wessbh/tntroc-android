@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
             transaction.replace(R.id.frame_container, fragment).commit();
         }
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Accueil");
         setSupportActionBar(toolbar);
         final IProfile profile = new ProfileDrawerItem().withName(full_name).withIcon("https://avatars3.githubusercontent.com/u/1476232?v=3&s=460").withIdentifier(100);
          // Create the AccountHeader
