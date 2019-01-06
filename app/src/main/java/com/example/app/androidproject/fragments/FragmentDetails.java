@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,8 @@ import com.example.app.androidproject.activities.MainActivity;
 import com.example.app.androidproject.utils.Constants;
 import com.example.app.androidproject.R;
 import com.example.app.androidproject.utils.MyAdapter;
+import com.github.aakira.expandablelayout.ExpandableLinearLayout;
+import com.github.aakira.expandablelayout.ExpandableWeightLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,7 +56,11 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
     private static ViewPager mPager;
     private static int currentPage = 0;
     public static String TAG = "FragmentDetails";
-    private TextView titre_value, prix_value;
+    private TextView titre_value, prix_value, description_label, description_value;
+    ImageView arrow;
+    Boolean expanded;
+    ExpandableLinearLayout  expandableLayout;
+
     public FragmentDetails() {
         // Required empty public constructor
     }
@@ -62,12 +69,37 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         final View view = inflater.inflate(R.layout.fragment_annonce, container, false);
         mQueue = Volley.newRequestQueue(getContext());
+        expanded = false;
+        //--------------- LAYOUT COMPONENTS----------------------------\\
         id = getArguments().getInt("postID");
         titre_value = (TextView) view.findViewById(R.id.titre_value);
+        description_label = (TextView) view.findViewById(R.id.description);
+        description_value = (TextView) view.findViewById(R.id.description_value);
         prix_value = (TextView) view.findViewById(R.id.prix_value);
+        expandableLayout= view.findViewById(R.id.expandableLayout);
+        arrow = (ImageView) view.findViewById(R.id.arrow);
+        arrow.setRotation(-180);
+        //--------------------------------------------------------------\\
+
+
+        description_label.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                expandableLayout.toggle();
+
+                if(expandableLayout.isExpanded()){
+                    arrow.setRotation(180);
+                    Toast.makeText(getActivity(), "Expanded", Toast.LENGTH_SHORT).show();
+
+                }
+                if(!expandableLayout.isExpanded())
+                    arrow.setRotation(-180);
+                Toast.makeText(getActivity(), "Not Expanded", Toast.LENGTH_SHORT).show();
+
+            }
+        });
         getImageList(id, new CallBack() {
             @Override
             public void onSuccess(ArrayList<String> imageList) {
@@ -84,7 +116,7 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
     }
 
     public void jsonParse(int id) {
-       final String url =  Constants.WEBSERVICE_URL+"/mdw/v1/post/"+id;
+        final String url =  Constants.WEBSERVICE_URL+"/mdw/v1/post/"+id;
         progressDialog = new ProgressDialog(getContext(),
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
@@ -118,6 +150,7 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
                             }
                             titre_value.setText(annonce.getTitle());
                             prix_value.setText(String.valueOf(annonce.getPrix()));
+                            description_value.setText(annonce.getDescription());
                             progressDialog.dismiss();
                             // progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {

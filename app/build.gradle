@@ -59,4 +59,9 @@ dependencies {
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'com.daimajia.slider:library:1.1.5@aar'
     implementation 'me.relex:circleindicator:1.2.2@aar'
+
+    //Expandable layout
+    implementation 'com.github.aakira:expandable-layout:1.6.0@aar'
+
+
 }
