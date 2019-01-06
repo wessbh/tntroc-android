@@ -47,7 +47,6 @@ public class MyAdapter extends PagerAdapter {
                 .error(R.drawable.error_img)
                 .placeholder(R.drawable.placeholder)
                 .into(myImage);
-       // myImage.setImageResource(images.get(position));
         view.addView(myImageLayout, 0);
         return myImageLayout;
     }
