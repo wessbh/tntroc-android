@@ -1,157 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.FragmentAnnonce">
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/myConstraint"
+
+    <RelativeLayout
+        android:id="@+id/topRelativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.daimajia.slider.library.SliderLayout
-            android:id="@+id/slider"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/actionBox"
+        android:layout_alignParentTop="true">
+
+        <ScrollView
             android:layout_width="match_parent"
-            app:layout_constraintBottom_toTopOf="@id/user_line"
-            android:layout_height="200dp"
-            />
-
-        <RelativeLayout
-            android:id="@+id/relative"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-            <android.support.v4.view.ViewPager
-                android:id="@+id/pager"
-                android:layout_width="fill_parent"
-                android:layout_height="300dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="15dp"/>
-            <me.relex.circleindicator.CircleIndicator
-                android:id="@+id/indicator"
+            android:layout_height="match_parent">
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/myConstraint"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_alignParentBottom="true"/>
-        </RelativeLayout>
-        <LinearLayout
-            android:id="@+id/user_line"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintTop_toBottomOf="@+id/relative"
-            app:layout_constraintBottom_toTopOf="@+id/titre_value"
-            app:layout_constraintLeft_toLeftOf="@+id/titre_value">
+                android:layout_height="wrap_content">
 
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/imageView_profile"
-                android:layout_width="25dp"
-                android:layout_height="25dp" />
+                <com.daimajia.slider.library.SliderLayout
+                    android:id="@+id/slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    app:layout_constraintBottom_toTopOf="@id/user_line" />
+
+                <RelativeLayout
+                    android:id="@+id/relative"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/pager"
+                        android:layout_width="fill_parent"
+                        android:layout_height="300dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="15dp" />
+
+                    <me.relex.circleindicator.CircleIndicator
+                        android:id="@+id/indicator"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_alignParentBottom="true" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/user_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toTopOf="@+id/titre_value"
+                    app:layout_constraintLeft_toLeftOf="@+id/titre_value"
+                    app:layout_constraintTop_toBottomOf="@+id/relative">
+
+                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/imageView_profile"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp" />
+
+                    <TextView
+                        android:id="@+id/username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/titre_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Titre"
+                    android:textColor="@color/black"
+                    android:textSize="17dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/relative" />
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:numStars="5"
+                    android:rating="3.5"
+                    android:stepSize="0.5"
+                    app:layout_constraintBottom_toTopOf="@id/first_seperation"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/titre_value" />
+
+                <View
+                    android:id="@+id/first_seperation"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@android:color/darker_gray"
+                    app:layout_constraintBottom_toTopOf="@id/description"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ratingBar" />
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:text="Description"
+                    android:textColor="@color/black"
+                    android:textSize="17sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/first_seperation"
+                    tools:layout_editor_absoluteX="15dp" />
+
+                <ImageView
+                    android:id="@+id/arrow"
+                    android:layout_width="25dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:contentDescription="@string/images"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:src="@drawable/arrowup"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/first_seperation" />
+
+                <net.cachapa.expandablelayout.ExpandableLayout
+                    android:id="@+id/expandableLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:el_duration="300"
+                    app:el_expanded="false"
+                    app:el_parallax="1"
+                    app:layout_constraintTop_toBottomOf="@id/description">
+
+                    <TextView
+                        android:id="@+id/description_value"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </net.cachapa.expandablelayout.ExpandableLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+        </ScrollView>
+
+    </RelativeLayout>
+     <android.support.constraint.ConstraintLayout
+         android:id="@+id/actionBox"
+         android:layout_width="match_parent"
+         android:layout_height="50dp"
+         android:layout_alignParentBottom="true"
+         android:background="@color/colorPrimaryExtraDark">
             <TextView
+                android:id="@+id/prix_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/username"
-                android:layout_marginStart="5dp"
-                android:textColor="@color/black"/>
-        </LinearLayout>
-        <TextView
-            android:id="@+id/titre_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="20dp"
-            android:text="Titre"
-            android:textColor="@color/black"
-            android:textSize="17dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/relative" />
-        <TextView
-            android:id="@+id/prix_value"
-            android:layout_marginTop="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/relative"
-            android:text="Prix"
-            android:textSize="15dp"
-            android:textColor="@color/button_orange"
-            android:textStyle="bold"/>
-        <RatingBar
-            android:id="@+id/ratingBar"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:numStars="5"
-            android:rating="3.5"
-            android:layout_marginStart="15dp"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/titre_value"
-            app:layout_constraintBottom_toTopOf="@id/first_seperation"
-            android:stepSize="0.5" />
-        <View
-            android:id="@+id/first_seperation"
-            android:layout_width="match_parent"
-            app:layout_constraintTop_toBottomOf="@id/ratingBar"
-            app:layout_constraintBottom_toTopOf="@id/description"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="10dp"
-            android:background="@android:color/darker_gray"/>
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="7dp"
-            android:paddingTop="7dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="15dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:text="Description"
-            android:textColor="@color/black"
-            android:textSize="17sp"
-            app:layout_constraintTop_toBottomOf="@+id/first_seperation"
-            tools:layout_editor_absoluteX="15dp" />
-        <ImageView
-            android:id="@+id/arrow"
-            android:layout_width="25dp"
-            android:layout_height="30dp"
-            android:paddingBottom="7dp"
-            android:paddingTop="7dp"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="15dp"
-            app:layout_constraintTop_toBottomOf="@id/first_seperation"
-            android:layout_marginEnd="15dp"
-            android:src="@drawable/arrowup"
-            />
-        <net.cachapa.expandablelayout.ExpandableLayout
-            android:id="@+id/expandableLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:el_duration="300"
-            app:layout_constraintTop_toBottomOf="@id/description"
-            app:el_expanded="false"
-            app:el_parallax="0.5">
-
-
-            <TextView
-                android:id="@+id/description_value"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginStart="15dp"
-                android:textStyle="bold"/>
+                android:layout_marginEnd="15dp"
+                android:text="Prix"
+                android:textSize="25sp"
+                android:textColor="@color/button_orange"
+                android:textStyle="bold"
+                />
 
-        </net.cachapa.expandablelayout.ExpandableLayout>
-
-        <LinearLayout
-            android:id="@+id/actionBox"
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:background="@color/colorPrimaryExtraDark"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent">
-        </LinearLayout>
-    </android.support.constraint.ConstraintLayout>
-
-</ScrollView>
+            <android.support.v7.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:padding="10dp"
+                android:background="@color/button_orange"
+                android:textSize="17sp"
+                android:textColor="@color/white"
+                android:text="Achat/Echange"
+                />
+     </android.support.constraint.ConstraintLayout>
+</RelativeLayout>

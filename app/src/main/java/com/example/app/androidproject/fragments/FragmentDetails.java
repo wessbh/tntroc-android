@@ -158,7 +158,7 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
                             }
                             getUser(annonce.getUser_id());
                             titre_value.setText(annonce.getTitle());
-                            prix_value.setText(String.valueOf(annonce.getPrix()));
+                            prix_value.setText(String.valueOf(annonce.getPrix())+" Dt");
                             description_value.setText(annonce.getDescription());
                             progressDialog.dismiss();
                             // progressBar.setVisibility(View.GONE);
