@@ -148,8 +148,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+                        android:paddingEnd="25dp"
+                        android:paddingStart="0dp"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"/>
                 </net.cachapa.expandablelayout.ExpandableLayout>
 
             </android.support.constraint.ConstraintLayout>
@@ -179,6 +181,7 @@
                 />
 
             <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_action"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 app:layout_constraintRight_toRightOf="parent"

@@ -2,21 +2,27 @@ package com.example.app.androidproject.fragments;
 
 
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,21 +35,17 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.example.app.androidproject.Entity.Annonce;
 import com.example.app.androidproject.Entity.User;
-import com.example.app.androidproject.activities.MainActivity;
+import com.example.app.androidproject.utils.AnnonceGridAdapter;
+import com.example.app.androidproject.utils.AnnonceListAdapter;
 import com.example.app.androidproject.utils.Constants;
 import com.example.app.androidproject.R;
 import com.example.app.androidproject.utils.MyAdapter;
-import com.github.aakira.expandablelayout.ExpandableLinearLayout;
-import com.github.aakira.expandablelayout.ExpandableWeightLayout;
-import com.squareup.picasso.Picasso;
-
+import com.orhanobut.android.dialogplussample.SimpleAdapter;
+import com.orhanobut.dialogplus.*;
 import net.cachapa.expandablelayout.ExpandableLayout;
 
 import org.json.JSONArray;
@@ -52,6 +54,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 
@@ -63,6 +66,9 @@ import me.relex.circleindicator.CircleIndicator;
 public class FragmentDetails extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, View.OnClickListener,  ExpandableLayout.OnExpansionUpdateListener{
     private int id;
     private ArrayList<String> imgList = new ArrayList<>();
+    private List<Annonce> annoncesList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private AnnonceListAdapter listAdapter;
     private RequestQueue mQueue;
     ProgressDialog progressDialog;
     private Annonce annonce;
@@ -74,8 +80,10 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
     Boolean expanded;
     ExpandableLayout expandableLayout;
     User user;
-
+    Button btn_action, btn_achat, btn_echange;
     Toolbar toolbar;
+    DialogPlus dialogBottom, dialogListview;
+    MyDialogFragment dialogFragment;
     public FragmentDetails() {
         // Required empty public constructor
     }
@@ -85,10 +93,13 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_annonce, container, false);
+        final View contentView = inflater.inflate(R.layout.content, container, false);
+        final View list_view = inflater.inflate(R.layout.fragment_home_layout, container, false);
         mQueue = Volley.newRequestQueue(getContext());
         expanded = false;
-        //--------------- LAYOUT COMPONENTS----------------------------\\
 
+        //--------------- LAYOUT COMPONENTS----------------------------\\
+        dialogFragment = new MyDialogFragment();
         toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Détails");
         id = getArguments().getInt("postID");
@@ -100,9 +111,46 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
         arrow = (ImageView) view.findViewById(R.id.arrow);
         imageView_profile = (ImageView) view.findViewById(R.id.imageView_profile);
         username = (TextView) view.findViewById(R.id.username);
-
+        btn_action = (Button) view.findViewById(R.id.btn_action) ;
+        btn_achat = (Button) contentView.findViewById(R.id.btn_achat) ;
+        btn_echange = (Button) contentView.findViewById(R.id.btn_echange);
+        recyclerView =list_view.findViewById(R.id.recycler_view);
         //--------------------------------------------------------------\\
-
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        getUserPosts();
+        dialogFragment.setShowsDialog(true);
+        dialogBottom = DialogPlus.newDialog(getContext())
+                .setAdapter(new SimpleAdapter(getContext(), false,2))
+                .setOnCancelListener(new OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogPlus dialog) {
+                    }
+                })
+                .setContentHolder(new ViewHolder(contentView))
+                .create();
+        btn_action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogBottom.show();
+            }
+        });
+        btn_achat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogBottom.dismiss();
+            }
+        });
+        btn_echange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogBottom.dismiss();
+                //dialogFragment.show(getActivity().getSupportFragmentManager(),"dialog");
+                showDialog();
+            }
+        });
         description_label.setOnClickListener(this);
         expandableLayout.setOnExpansionUpdateListener(this);
         arrow.setOnClickListener(this);
@@ -253,6 +301,61 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
     }
 
 
+    public void getUserPosts() {
+        String url =  Constants.WEBSERVICE_URL+"/mdw/v1/"+"posts_user/"+Constants.user.getId();
+        Log.d("dialogFragment", "in function: ");
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+
+                            JSONArray jsonArray = response.getJSONArray("post");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject post = jsonArray.getJSONObject(i);
+                                int id = post.getInt("id");
+                                String titre = post.getString("title");
+                                String desc = post.getString("description");
+                                String strDate = post.getString("created_at");
+                                String img = post.getString("img");
+                                String categorie = post.getString("categorie");
+                                String prix = post.getString("prix");
+                                Annonce annonce = new Annonce();
+                                annonce.setId(id);
+                                annonce.setTitle(titre);
+                                annonce.setDescription(desc);
+                                annonce.setCreated_at(strDate);
+                                annonce.setImg(img);
+                                annonce.setCategorie(categorie);
+                                annonce.setPrix(Integer.valueOf(prix));
+                                annoncesList.add(annonce);
+                            }
+                            listAdapter = new AnnonceListAdapter(annoncesList);
+                            recyclerView.setAdapter(listAdapter);
+                            // progressBar.setVisibility(View.GONE);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }){
+
+            /**
+             * Passing some request headers
+             */
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", Constants.user.getApi_key());
+                return headers;
+            }
+        };
+        mQueue.add(request);
+    }
 
     public void getImageList(int id, final CallBack onCallBack) {
 
@@ -350,5 +453,38 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
             }
         };
         Timer swipeTimer = new Timer();
+    }
+
+    public void showDialog(){
+
+        //------------------------------- Alert Dialog---------------------------------\\
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity(), R.style.MyDialogTheme);
+        alertDialogBuilder.setTitle("Sélectionner une annonce ");
+        if(recyclerView.getParent() != null) {
+            ((ViewGroup)recyclerView.getParent()).removeView(recyclerView);
+        }
+        alertDialogBuilder.setPositiveButton("Confirmer",
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        dialog.cancel();
+                        Toast.makeText(getContext(), "Done", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton("Annuler",
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        dialog.cancel();
+                        Toast.makeText(getContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        alertDialogBuilder.setView(recyclerView);
+        alertDialogBuilder.show();
+        //-----------------------------------------------------------------------------\\
     }
 }

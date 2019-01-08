@@ -69,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+
         logo = findViewById(R.id.logo);
         callbackManager = CallbackManager.Factory.create();
         input_username = findViewById(R.id.input_username);

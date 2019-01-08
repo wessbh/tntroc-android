@@ -1,11 +1,12 @@
 package com.example.app.androidproject.fragments;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -25,78 +26,92 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.app.androidproject.Entity.Annonce;
-import com.example.app.androidproject.utils.Constants;
-import com.example.app.androidproject.activities.LoginActivity;
 import com.example.app.androidproject.R;
-import com.example.app.androidproject.utils.*;
+import com.example.app.androidproject.utils.AnnonceListAdapter;
+import com.example.app.androidproject.utils.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FragmentHome extends Fragment {
-    private static final String TAG = "FragmentHome";
-    private static final String ARG_SECTION_NUMBER = "section_number";
-    private int sectionNumber;
-    private List<Annonce> annoncesList = new ArrayList<>();
+public class MyDialogFragment extends DialogFragment {
     private RecyclerView recyclerView;
-    private AnnonceListAdapter mAdapter;
+    private List<Annonce> annoncesList = new ArrayList<>();
+    private AnnonceListAdapter listAdapter;
     private RequestQueue mQueue;
-    TextView textTitle;
-    String apiKey;
-    ProgressDialog progressDialog;
 
-
-    public static FragmentHome newInstance(int sectionNumber) {
-        FragmentHome fragment = new FragmentHome();
-        Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        fragment.setArguments(args);
-        return fragment;
+    public MyDialogFragment() {
+        Log.d("dialogFragment", "in Construct: ");
     }
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Toast.makeText(getActivity(), ARG_SECTION_NUMBER+"", Toast.LENGTH_SHORT).show();
-        View view = inflater.inflate(R.layout.fragment_home_layout, container, false);
-        apiKey = Constants.user.getApi_key();
-        //------------------------- RecyclerView -----------------------------------\\
 
-        recyclerView = view.findViewById(R.id.recycler_view);
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//        //inflate layout with recycler view
+//        View v = inflater.inflate(R.layout.fragment_home_layout, container, false);
+//        recyclerView = v.findViewById(R.id.recycler_view);
+//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+//        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+//        recyclerView.setLayoutManager(mLayoutManager);
+//        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        mQueue = Volley.newRequestQueue(getContext());
+//
+//
+//        getUserPosts();
+//        return v;
+//    }
+
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout linear= new LinearLayout(getContext());
+        linear = (LinearLayout)layoutInflater.inflate(R.layout.fragment_home_layout, linear);
+        recyclerView =linear.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        textTitle.setText("Vous n'avez aucun PDF");
-        textTitle.setVisibility(View.GONE);
         mQueue = Volley.newRequestQueue(getContext());
-        jsonParse();
+        getUserPosts();
+        String title ="Sélectionner une annonce ";
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setTitle(title);
+        alertDialogBuilder.setView(recyclerView);
+        alertDialogBuilder.setMessage("Are you sure?");
 
-        return view;
+        alertDialogBuilder.setPositiveButton("OK",  new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // on success
+            }
+        });
+        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+
+        });
+
+        return alertDialogBuilder.create();
     }
 
-
-    public void jsonParse() {
-        String url =  Constants.WEBSERVICE_URL+"/mdw/v1/all_posts";
-        progressDialog = new ProgressDialog(getContext(),
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Retrieving data...");
-
+    public void getUserPosts() {
+        String url =  Constants.WEBSERVICE_URL+"/mdw/v1/"+"posts_user/"+Constants.user.getId();
+        Log.d("dialogFragment", "in function: ");
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+
                             JSONArray jsonArray = response.getJSONArray("post");
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject post = jsonArray.getJSONObject(i);
@@ -106,6 +121,7 @@ public class FragmentHome extends Fragment {
                                 String strDate = post.getString("created_at");
                                 String img = post.getString("img");
                                 String categorie = post.getString("categorie");
+                                String prix = post.getString("prix");
                                 Annonce annonce = new Annonce();
                                 annonce.setId(id);
                                 annonce.setTitle(titre);
@@ -113,11 +129,13 @@ public class FragmentHome extends Fragment {
                                 annonce.setCreated_at(strDate);
                                 annonce.setImg(img);
                                 annonce.setCategorie(categorie);
+                                annonce.setPrix(Integer.valueOf(prix));
                                 annoncesList.add(annonce);
                             }
-                            progressDialog.dismiss();
-                            mAdapter = new AnnonceListAdapter(annoncesList);
-                            recyclerView.setAdapter(mAdapter);
+                            Toast.makeText(getContext(), ""+annoncesList.get(0).getTitle(), Toast.LENGTH_SHORT).show();
+                            listAdapter = new AnnonceListAdapter(annoncesList);
+                            recyclerView.setAdapter(listAdapter);
+                            // progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
