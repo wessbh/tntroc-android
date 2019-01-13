@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,19 +16,20 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.Button;
+import android.widget.ImageView;
 
-import com.example.app.androidproject.fragments.FragmentNetworkProblem;
-import com.example.app.androidproject.utils.Constants;
 import com.example.app.androidproject.Entity.User;
 import com.example.app.androidproject.R;
-import com.example.app.androidproject.fragments.FragmentAddPost;
+import com.example.app.androidproject.fragments.FragmentFavoris;
+import com.example.app.androidproject.fragments.FragmentHome;
 import com.example.app.androidproject.fragments.FragmentHomeGrid;
+import com.example.app.androidproject.fragments.FragmentNetworkProblem;
 import com.example.app.androidproject.fragments.FragmentProfile;
 import com.example.app.androidproject.fragments.FragmentViewPager;
+import com.example.app.androidproject.utils.Constants;
 import com.google.gson.Gson;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
@@ -41,6 +44,7 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import com.squareup.picasso.Picasso;
 
 
 public class MainActivity extends AppCompatActivity implements  FragmentManager.OnBackStackChangedListener{
@@ -49,14 +53,14 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
     private String apikey, full_name, img_url;
     private FloatingActionButton btn_add;
     private int confirmation = 0;
+    private Button btn_favoris;
     private FragmentManager fm;
     private TabLayout tabLayout;
     //This is our viewPager
     private ViewPager viewPager;
-
-    //save our header or result
     private AccountHeader headerResult = null;
     private Drawer result = null;
+    ImageView favoris;
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(IconicsContextWrapper.wrap(newBase));
@@ -70,6 +74,22 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
         img_url = Constants.USER_IMG_PATH+Constants.user.getImage();
         apikey = getAPIKey();
         full_name = getFullName();
+        favoris = findViewById(R.id.btn_favoris);
+        favoris.setColorFilter(Color.argb(255, 255, 255, 255));
+        Picasso.get().load("http://icons.iconarchive.com/icons/icons8/windows-8/256/Ecommerce-Shopping-Cart-icon.png")
+                .resize(85, 85)
+                .centerCrop()
+                .error(R.drawable.error_img)
+                .placeholder(R.drawable.placeholder)
+                .into(favoris);
+        favoris.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentFavoris fragmentFavoris = new FragmentFavoris();
+                FragmentTransaction transaction = fm.beginTransaction();
+                transaction.replace(R.id.frame_container, fragmentFavoris).addToBackStack(null).commit();
+            }
+        });
         btn_add = (FloatingActionButton) findViewById(R.id.add_btn);
         btn_add.setVisibility(View.GONE);
         if (getAPIKey().equals("")){
@@ -89,10 +109,19 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
             FragmentTransaction transaction = fm.beginTransaction();
             transaction.replace(R.id.frame_container, fragment).commit();
         }
+       // btn_favoris = findViewById(R.id.btn_favorite);
+        favoris.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentHome f = new FragmentHome();
+                FragmentTransaction transaction = fm.beginTransaction();
+                transaction.replace(R.id.frame_container, f).addToBackStack(null).commit();
+            }
+        });
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Accueil");
         setSupportActionBar(toolbar);
-        final IProfile profile = new ProfileDrawerItem().withName(full_name).withIcon("https://avatars3.githubusercontent.com/u/1476232?v=3&s=460").withIdentifier(100);
+        final IProfile profile = new ProfileDrawerItem().withName(full_name).withIcon(Constants.USER_IMG_PATH+Constants.user.getImage()).withIdentifier(100);
          // Create the AccountHeader
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -114,13 +143,11 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
                                 headerResult.addProfiles(newProfile);
                             }
                         }
-
                         return false;
                     }
                 })
                 .withSavedInstance(savedInstanceState)
                 .build();
-
         result = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
@@ -133,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
                         new PrimaryDrawerItem().withName("Mon Profil").withIcon(FontAwesome.Icon.faw_user).withIdentifier(2).withSelectable(true),
                         new PrimaryDrawerItem().withName("Mes annonces").withIcon(FontAwesome.Icon.faw_clipboard_list).withIdentifier(3).withSelectable(true),
                         new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withName("Offres").withIcon(FontAwesome.Icon.faw_chalkboard_teacher).withIdentifier(4).withSelectable(true),
+                        new PrimaryDrawerItem().withName("Mes demandes").withIcon(FontAwesome.Icon.faw_chalkboard_teacher).withIdentifier(4).withSelectable(true),
                         new SectionDrawerItem().withName("Mise A jour Profil").withDivider(true),
                         new PrimaryDrawerItem().withName("Mot de passe").withIcon(FontAwesome.Icon.faw_user_lock).withIdentifier(5).withSelectable(true),
                         new DividerDrawerItem(),
@@ -142,7 +169,6 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-
                         Fragment f2 = null;
                         if (drawerItem != null) {
                             if (drawerItem.getIdentifier() == 1) {

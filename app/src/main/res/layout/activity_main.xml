@@ -17,8 +17,17 @@
         android:minHeight="?attr/actionBarSize"
         app:titleTextAppearance="@style/Toolbar.TitleText"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
+    <ImageView
+        android:id="@+id/btn_favoris"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Favorite"
+        android:layout_gravity="end"
+        android:layout_marginEnd="15dp"
+        />
+    </android.support.v7.widget.Toolbar>
     <FrameLayout
         android:layout_below="@id/toolbar"
         android:id="@+id/frame_container"

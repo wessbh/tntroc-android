@@ -135,8 +135,6 @@ public class RegisterActivity extends AppCompatActivity  {
         btn_create_account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 username = input_username.getText().toString().trim();
                 name = input_name.getText().toString().trim();
                 lastname = input_last_name.getText().toString().trim();

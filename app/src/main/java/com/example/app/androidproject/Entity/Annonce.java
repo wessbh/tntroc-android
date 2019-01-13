@@ -12,8 +12,27 @@ public class Annonce {
     private String updated_at;
     private String categorie;
     private int prix;
+    public static final String TABLE_NAME = "annonce";
+    public static final String COLUMN_ID = "id";
+    public static final String COLUMN_TITRE = "titre";
+    public static final String COLUMN_PRIX = "prix";
+    public static final String COLUMN_IMG = "img";
+    public static final String CREATE_TABLE =
+            "CREATE TABLE " + TABLE_NAME + "("
+                    + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + COLUMN_TITRE + " TEXT,"
+                    + COLUMN_PRIX + " INTEGER,"
+                    + COLUMN_IMG + " TEXT"
+                    + ")";
 
     public Annonce() {
+    }
+
+    public Annonce(int id, String title, int prix, String img) {
+        this.id = id;
+        this.title = title;
+        this.img = img;
+        this.prix = prix;
     }
 
     public Annonce(int id, String title, String description, int user_id, String img, String created_at, String date_exp, int status, String updated_at, String categorie, int prix) {

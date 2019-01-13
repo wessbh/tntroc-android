@@ -69,7 +69,6 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-
         logo = findViewById(R.id.logo);
         callbackManager = CallbackManager.Factory.create();
         input_username = findViewById(R.id.input_username);
@@ -261,10 +260,4 @@ public class LoginActivity extends AppCompatActivity {
         Constants.user = u;
     }
 
-    public String getAPIKey (){
-        String s;
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFS, MODE_PRIVATE);
-        s = sharedPreferences.getString(Constants.API_KEY, null);
-        return s;
-    }
 }

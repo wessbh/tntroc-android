@@ -14,7 +14,6 @@ class SimpleAdapter(
     private val isGrid: Boolean,
     private val count: Int
 ) : BaseAdapter() {
-
   private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
   override fun getCount(): Int {

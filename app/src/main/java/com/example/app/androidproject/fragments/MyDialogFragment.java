@@ -133,7 +133,7 @@ public class MyDialogFragment extends DialogFragment {
                                 annoncesList.add(annonce);
                             }
                             Toast.makeText(getContext(), ""+annoncesList.get(0).getTitle(), Toast.LENGTH_SHORT).show();
-                            listAdapter = new AnnonceListAdapter(annoncesList);
+                            //listAdapter = new AnnonceListAdapter(annoncesList);
                             recyclerView.setAdapter(listAdapter);
                             // progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {

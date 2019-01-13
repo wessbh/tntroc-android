@@ -44,6 +44,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_alignParentBottom="true" />
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/tofavoris"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:backgroundTint="@color/white"
+                        android:tint="@color/secondary"
+                        android:src="@drawable/heart"
+                        android:elevation="0dp"
+                        app:elevation="0dp"
+                        android:layout_alignBottom="@+id/pager"
+                        android:layout_alignEnd="@id/indicator"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignBaseline="@+id/indicator"
+                        />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -74,13 +91,14 @@
                     android:id="@+id/titre_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
                     android:layout_marginTop="20dp"
                     android:text="Titre"
                     android:textColor="@color/black"
-                    android:textSize="17dp"
+                    android:textSize="17sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/relative" />
+
 
                 <RatingBar
                     android:id="@+id/ratingBar"
@@ -95,17 +113,47 @@
                     app:layout_constraintBottom_toTopOf="@id/first_seperation"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/titre_value" />
-
+                <ImageView
+                    android:id="@+id/img_comment"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/comment"
+                    android:tint="@color/accent"
+                    app:layout_constraintBottom_toBottomOf="@id/ratingBar"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginEnd="15dp"/>
                 <View
                     android:id="@+id/first_seperation"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="3dp"
                     android:layout_marginBottom="10dp"
                     android:background="@android:color/darker_gray"
-                    app:layout_constraintBottom_toTopOf="@id/description"
+                    app:layout_constraintBottom_toTopOf="@id/recycler_comment"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/ratingBar" />
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/first_seperation"
+                    app:layout_constraintBottom_toTopOf="@+id/description">
+
+                </android.support.v7.widget.RecyclerView>
+
+
+                <View
+                    android:id="@+id/second_separation"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/darker_gray"
+                    app:layout_constraintTop_toBottomOf="@id/recycler_comment"
+                    app:layout_constraintBottom_toTopOf="@id/description"
+                    app:layout_constraintLeft_toLeftOf="parent" />
                 <TextView
                     android:id="@+id/description"
                     android:layout_width="match_parent"
@@ -118,21 +166,20 @@
                     android:textColor="@color/black"
                     android:textSize="17sp"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/first_seperation"
+                    app:layout_constraintTop_toBottomOf="@+id/second_separation"
                     tools:layout_editor_absoluteX="15dp" />
 
                 <ImageView
                     android:id="@+id/arrow"
                     android:layout_width="25dp"
                     android:layout_height="30dp"
-                    android:layout_marginTop="15dp"
                     android:layout_marginEnd="15dp"
                     android:contentDescription="@string/images"
                     android:paddingTop="7dp"
                     android:paddingBottom="7dp"
                     android:src="@drawable/arrowup"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/first_seperation" />
+                    app:layout_constraintBottom_toBottomOf="@id/description" />
 
                 <net.cachapa.expandablelayout.ExpandableLayout
                     android:id="@+id/expandableLayout"

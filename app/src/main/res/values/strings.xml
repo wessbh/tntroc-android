@@ -65,9 +65,10 @@
     <string name="button_center">Center</string>
     <string name="button_top">Top</string>
     <string name="echange">Echange</string>
-    <string name="achter">Achter</string>
+    <string name="achter">Acheter</string>
     <string name="operations">Quelle opération voulez-vous faire ?</string>
     <string name="confimer">Confimer</string>
 
-
+    <string name="label1">This is an example {fa-smile-o} {fa-thumbs-o-up}</string>
+    <string name="label2">{fa-font-awesome} Font Awesome</string>
 </resources>
