@@ -52,7 +52,7 @@ public class FragmentViewPager extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_pager, container, false);
-
+        this.setRetainInstance(true);
         toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Accueil");
         mQueue = Volley.newRequestQueue(getContext());

@@ -100,30 +100,6 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
                 .error(R.drawable.error_img)
                 .placeholder(R.drawable.placeholder)
                 .into(holder.thumbnail);
-        holder.title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toDetails(annonce);
-            }
-        });
-        holder.categorie.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toDetails(annonce);
-            }
-        });
-        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toDetails(annonce);
-            }
-        });
-        holder.prix.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toDetails(annonce);
-            }
-        });
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,66 +153,5 @@ public class AnnonceGridAdapter extends RecyclerView.Adapter<AnnonceGridAdapter.
 
     public int getId() {
         return id;
-    }
-
-    public void changeFragment(Fragment fragment){
-        MainActivity myact = (MainActivity) mContext;
-        myact.getSupportFragmentManager().popBackStack();
-        myact.getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).addToBackStack("toGrid").commit();
-    }
-
-    public void jsonParse(int id, final ArrayList<String> imageList) {
-
-        final String url =  Constants.WEBSERVICE_URL+"/mdw/v1/post_image/"+id;
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-
-                            JSONArray jsonArray = response.getJSONArray("post");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject post = jsonArray.getJSONObject(i);
-                                String img = post.getString("image");
-                                imageList.add(img);
-                            }
-                            // progressBar.setVisibility(View.GONE);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        }){
-
-            /**
-             * Passing some request headers
-             */
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Authorization", Constants.user.getApi_key());
-                return headers;
-            }
-        };
-        mQueue.add(request);
-    }
-    public void toDetails(Annonce annonce){
-
-        MainActivity myact = (MainActivity) mContext;
-        mQueue = Volley.newRequestQueue(myact.getApplicationContext());
-        Fragment fragment = new FragmentDetails();
-        ArrayList<String> myList = new ArrayList<>();
-        jsonParse(annonce.getId(), myList);
-        changeFragment(fragment);
-        Bundle args = new Bundle();
-        args.putInt("postID", annonce.getId());
-        args.putStringArrayList("list", myList);
-
-        fragment.setArguments(args);
     }
 }

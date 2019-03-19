@@ -80,11 +80,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(input_ip.getText().toString().equals("")){
-                    Constants.WEBSERVICE_URL = "http://192.168.1.16";
-                }
-                else{
-
+                if(!input_ip.getText().toString().equals("")){
                     Constants.WEBSERVICE_URL = "http://"+input_ip.getText();
                 }
                 username = input_username.getText().toString().trim();
@@ -172,7 +168,7 @@ public class LoginActivity extends AppCompatActivity {
     public void loginRequest (final String usernameLogin, final String passwordLogin ){
         progressDialog.show();
         user = new User();
-        String url = Constants.WEBSERVICE_URL+"/mdw/v1/login";
+        final String url = Constants.WEBSERVICE_URL+"/mdw/v1/login";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
                 {
@@ -180,24 +176,31 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            user.setId(Integer.valueOf(jsonObject.get("id").toString()));
-                            user.setUsername(jsonObject.get("username").toString());
-                            user.setName(jsonObject.get("name").toString());
-                            user.setLast_name(jsonObject.get("last_name").toString());
-                            user.setEmail(jsonObject.get("email").toString());
-                            user.setNumtel(jsonObject.get("num_tel").toString());
-                            user.setAdresse(jsonObject.get("adresse").toString());
-                            user.setDate_naissance(jsonObject.get("date_naissance").toString());
-                            user.setApi_key(jsonObject.get("apiKey").toString());
-                            user.setImage(jsonObject.get("image").toString());
-                            user.setLast_login(jsonObject.get("last_login").toString());
-                            String respName = user.getName()+" "+user.getLast_name();
-                            setUserSharedPrefs(user);
-                            loginSharedPrefs(respName, ""+jsonObject.get("apiKey").toString() );
-                            progressDialog.dismiss();
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
+                            Boolean state = jsonObject.getBoolean("error");
+                            if (!state){
+                                user.setId(Integer.valueOf(jsonObject.get("id").toString()));
+                                user.setUsername(jsonObject.get("username").toString());
+                                user.setName(jsonObject.get("name").toString());
+                                user.setLast_name(jsonObject.get("last_name").toString());
+                                user.setEmail(jsonObject.get("email").toString());
+                                user.setNumtel(jsonObject.get("num_tel").toString());
+                                user.setAdresse(jsonObject.get("adresse").toString());
+                                user.setDate_naissance(jsonObject.get("date_naissance").toString());
+                                user.setApi_key(jsonObject.get("apiKey").toString());
+                                user.setImage(jsonObject.get("image").toString());
+                                user.setLast_login(jsonObject.get("last_login").toString());
+                                String respName = user.getName()+" "+user.getLast_name();
+                                setUserSharedPrefs(user);
+                                loginSharedPrefs(respName, ""+jsonObject.get("apiKey").toString() );
+                                progressDialog.dismiss();
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                            else {
+                                progressDialog.dismiss();
+                                Toast.makeText(LoginActivity.this, "non trouvé", Toast.LENGTH_SHORT).show();
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -209,6 +212,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();
                         Toast.makeText(getApplication(),"Error ", Toast.LENGTH_SHORT).show();
+                        Log.d("mriGel", url);
                     }
                 }
         ) {

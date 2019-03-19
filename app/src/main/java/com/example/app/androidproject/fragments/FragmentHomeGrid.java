@@ -15,6 +15,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -28,6 +29,8 @@ import com.example.app.androidproject.activities.MainActivity;
 import com.example.app.androidproject.utils.Constants;
 import com.example.app.androidproject.R;
 import com.example.app.androidproject.utils.AnnonceGridAdapter;
+import com.example.app.androidproject.utils.CustomRVItemTouchListener;
+import com.example.app.androidproject.utils.RecyclerViewItemClickListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -93,6 +96,25 @@ public class FragmentHomeGrid extends Fragment {
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(2), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         jsonParse(root);
+        recyclerView.addOnItemTouchListener(new CustomRVItemTouchListener(getContext(), recyclerView, new RecyclerViewItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Fragment fragment = new FragmentDetails();
+                ArrayList<String> myList = new ArrayList<>();
+                getPostImages(annoncesList.get(position).getId(), myList);
+                Bundle args = new Bundle();
+                args.putInt("postID", annoncesList.get(position).getId());
+                args.putStringArrayList("list", myList);
+                fragment.setArguments(args);
+                getActivity().getSupportFragmentManager().popBackStack();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).addToBackStack(null).commit();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
 
         return view;
     }
@@ -200,5 +222,48 @@ public class FragmentHomeGrid extends Fragment {
     private int dpToPx(int dp) {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+    public void getPostImages(int id, final ArrayList<String> imageList) {
+
+        final String url =  Constants.WEBSERVICE_URL+"/mdw/v1/post_image/"+id;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+
+                            JSONArray jsonArray = response.getJSONArray("post");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject post = jsonArray.getJSONObject(i);
+                                String img = post.getString("image");
+                                imageList.add(img);
+                            }
+                            // progressBar.setVisibility(View.GONE);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }){
+
+            /**
+             * Passing some request headers
+             */
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", Constants.user.getApi_key());
+                return headers;
+            }
+        };
+        mQueue.add(request);
+    }
+
+    public void toDetails(Annonce annonce){
     }
 }

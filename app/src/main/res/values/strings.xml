@@ -71,4 +71,8 @@
 
     <string name="label1">This is an example {fa-smile-o} {fa-thumbs-o-up}</string>
     <string name="label2">{fa-font-awesome} Font Awesome</string>
+    <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
+    <string name="default_notification_channel_name" translatable="true">MyNotifications</string>
+    <string name="fcm_message">FCM Message</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
 </resources>

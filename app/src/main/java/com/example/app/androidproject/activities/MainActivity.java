@@ -1,13 +1,17 @@
 package com.example.app.androidproject.activities;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -17,9 +21,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.app.androidproject.Entity.User;
 import com.example.app.androidproject.R;
@@ -30,6 +36,10 @@ import com.example.app.androidproject.fragments.FragmentNetworkProblem;
 import com.example.app.androidproject.fragments.FragmentProfile;
 import com.example.app.androidproject.fragments.FragmentViewPager;
 import com.example.app.androidproject.utils.Constants;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.Gson;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
@@ -56,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
     private Button btn_favoris;
     private FragmentManager fm;
     private TabLayout tabLayout;
+    private static final String TAG = "MainActivity";
     //This is our viewPager
     private ViewPager viewPager;
     private AccountHeader headerResult = null;
@@ -69,6 +80,25 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+
+                        // Log and toast
+                        String msg = getString(R.string.msg_token_fmt, token);
+                        Log.d("firebaseToken", msg);
+                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
         setConstants();
         fm = getSupportFragmentManager();
         img_url = Constants.USER_IMG_PATH+Constants.user.getImage();
@@ -346,3 +376,7 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
         builder.show();
     }
 }
+/*
+ft_8TQvcMcI:APA91bF-NTtxHv7GuSSuxbBLxiTqruaNHcJbrqFoXlpF-MCF8WpJslhAKWE8AtY9O7GsFOgBNw39EcJut-rizQ9JOqnoIYXOL9F2w8Wyq73UQzRQYNK_FcmoebmXoZqAYefpJsvyh6sI
+
+ * */
