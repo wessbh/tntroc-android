@@ -8,28 +8,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:630889418561:android:01f622085e6a38ad",
+        "mobilesdk_app_id": "1:630889418561:android:770d366676b69d7c",
         "android_client_info": {
-          "package_name": "com.example.app.androidproject"
+          "package_name": "com.esprit.app.tntroc"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "630889418561-frs1ij5ebt1vrg1d6djlh9obail7bvb7.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.app.androidproject",
-            "certificate_hash": "039e2a498ba36eb802b02a1ee1874054b268ebea"
-          }
-        },
-        {
-          "client_id": "630889418561-aoihbiflt00hb19n1paeco4o5et73dg5.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.app.androidproject",
-            "certificate_hash": "8ce3b5e3516bb10bae9f2a158ea5eab6431c9094"
-          }
-        },
         {
           "client_id": "630889418561-tk9lvlfikt0keiig7la2enkcsvtsipf1.apps.googleusercontent.com",
           "client_type": 3
@@ -45,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "630889418561-tk9lvlfikt0keiig7la2enkcsvtsipf1.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

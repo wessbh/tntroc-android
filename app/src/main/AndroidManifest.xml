@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.app.androidproject">
+    package="com.esprit.app.tntroc">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -42,16 +42,16 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.LoginActivity">
+        <activity android:name="com.esprit.app.tntroc.activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MainActivity" android:configChanges="orientation|screenSize|keyboardHidden" ></activity>
-        <activity android:name=".activities.RegisterActivity"></activity>
-        <service android:name=".utils.MyFirebaseMessagingService">
+        <activity android:name="com.esprit.app.tntroc.activities.MainActivity" android:configChanges="orientation|screenSize|keyboardHidden" ></activity>
+        <activity android:name="com.esprit.app.tntroc.activities.RegisterActivity"></activity>
+        <service android:name="com.esprit.app.tntroc.utils.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
