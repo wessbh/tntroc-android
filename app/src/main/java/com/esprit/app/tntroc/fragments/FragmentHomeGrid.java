@@ -55,7 +55,7 @@ public class FragmentHomeGrid extends Fragment {
     private int sectionNumber;
     private String root;
     private FragmentManager fm;
-    public static String TAG = "FragmentHomeGrid";
+    public static String TAG = "FragmentActionsList";
 
     public FragmentHomeGrid() {
         this.setRetainInstance(true);
@@ -106,7 +106,7 @@ public class FragmentHomeGrid extends Fragment {
                 args.putStringArrayList("list", myList);
                 fragment.setArguments(args);
                 getActivity().getSupportFragmentManager().popBackStack();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).addToBackStack(null).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_container, fragment).addToBackStack(null).commit();
             }
 
             @Override

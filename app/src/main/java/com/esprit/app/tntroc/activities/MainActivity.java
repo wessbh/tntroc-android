@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.esprit.app.tntroc.Entity.User;
 import com.esprit.app.tntroc.R;
+import com.esprit.app.tntroc.fragments.FragmentActions;
 import com.esprit.app.tntroc.fragments.FragmentFavoris;
 import com.esprit.app.tntroc.fragments.FragmentHome;
 import com.esprit.app.tntroc.fragments.FragmentHomeGrid;
@@ -34,6 +35,7 @@ import com.esprit.app.tntroc.fragments.FragmentNetworkProblem;
 import com.esprit.app.tntroc.fragments.FragmentProfile;
 import com.esprit.app.tntroc.fragments.FragmentViewPager;
 import com.esprit.app.tntroc.utils.Constants;
+import com.esprit.app.tntroc.utils.SimpleFragmentPagerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
 
             FragmentViewPager fragmentViewPager = new FragmentViewPager();
             FragmentTransaction transaction = fm.beginTransaction();
-            transaction.replace(R.id.frame_container, fragmentViewPager).addToBackStack(null).commit();
+            transaction.replace(R.id.frame_container, fragmentViewPager).commit();
         }
         else{
             showDialog(this, "Oops !","Pas de connexion réseau !" );
@@ -188,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
                         new PrimaryDrawerItem().withName("Mon Profil").withIcon(FontAwesome.Icon.faw_user).withIdentifier(2).withSelectable(true),
                         new PrimaryDrawerItem().withName("Mes annonces").withIcon(FontAwesome.Icon.faw_clipboard_list).withIdentifier(3).withSelectable(true),
                         new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withName("Mes demandes").withIcon(FontAwesome.Icon.faw_chalkboard_teacher).withIdentifier(4).withSelectable(true),
+                        new PrimaryDrawerItem().withName("Demandes vente/achat").withIcon(FontAwesome.Icon.faw_chalkboard_teacher).withIdentifier(4).withSelectable(true),
                         new SectionDrawerItem().withName("Mise A jour Profil").withDivider(true),
                         new PrimaryDrawerItem().withName("Mot de passe").withIcon(FontAwesome.Icon.faw_user_lock).withIdentifier(5).withSelectable(true),
                         new DividerDrawerItem(),
@@ -220,6 +222,10 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
                                 });
                                 f2 = FragmentHomeGrid.newInstance(0, "posts_user/"+Constants.user.getId());
                             }
+                            if (drawerItem.getIdentifier() == 4) {
+                                f2 = new FragmentActions();
+
+                            }
                             if (drawerItem.getIdentifier() == 21) {
                                 disconnect();
                             }
@@ -228,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
                             }
                             if (f2 instanceof FragmentViewPager) {
                                 Intent intent = getIntent();
-                                changeIntent(intent);
+                                //changeIntent(intent);
 
                             }
 
@@ -261,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
                 } else {
                     //change to hamburger icon
                     Intent intent = getIntent();
-                    changeIntent(intent);
+                    //changeIntent(intent);
                     result.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                     result.getActionBarDrawerToggle().syncState();
@@ -275,7 +281,6 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
             //set the active profile
             headerResult.setActiveProfile(profile);
         }
-
     }
 
     @Override
@@ -339,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
     public void changeFragment(Fragment fragment){
 
        FragmentTransaction transaction =fm.beginTransaction();
-       transaction.replace(R.id.frame_container, fragment);
+       transaction.add(R.id.frame_container, fragment);
        transaction.addToBackStack(null);
        transaction.commit();
     }

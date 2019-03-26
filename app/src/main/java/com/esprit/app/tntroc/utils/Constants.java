@@ -1,5 +1,6 @@
 package com.esprit.app.tntroc.utils;
 
+import com.esprit.app.tntroc.Entity.Annonce;
 import com.esprit.app.tntroc.Entity.User;
 
 public class Constants {
@@ -15,5 +16,6 @@ public class Constants {
     public static final String ANNONCE_IMG_PATH = WEBSERVICE_URL+"/mdw/uploadimage/uploads/annonces/";
     public static final String USER_IMG_PATH = WEBSERVICE_URL+"/mdw/uploadimage/uploads/users/";
     public static final Boolean IN_USER_ANNONCES = false;
+    public static Annonce annonce_static = new Annonce();
 
 }

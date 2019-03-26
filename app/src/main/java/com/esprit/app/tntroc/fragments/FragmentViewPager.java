@@ -3,6 +3,7 @@ package com.esprit.app.tntroc.fragments;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -98,7 +99,10 @@ public class FragmentViewPager extends Fragment {
             this.cats = cat;
         }
 
-
+        @Override
+        public Parcelable saveState() {
+            return null;
+        }
         @Override
         public Fragment getItem(int position) {
 

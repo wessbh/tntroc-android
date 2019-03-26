@@ -325,6 +325,7 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
                                 myAnnonce.setCategorie(categorie);
                                 myAnnonce.setPrix(Integer.valueOf(prix));
                                 annonce = myAnnonce;
+                                Constants.annonce_static = myAnnonce;
                             }
                             checkOwner(annonce.getUser_id(), Constants.user.getId());
                             getComments(annonce.getId());
@@ -365,7 +366,7 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
 
     public void getUser(int id) {
         final String url =  Constants.WEBSERVICE_URL+"/mdw/v1/user_by_id/"+id;
-        progressDialog = new ProgressDialog(getContext(),
+        progressDialog = new ProgressDialog(getActivity(),
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Retrieving data...");
@@ -848,4 +849,5 @@ public class FragmentDetails extends Fragment implements BaseSliderView.OnSlider
         toastContentView.addView(img, 0);
         toastCorrect.show();
         }
+
 }
