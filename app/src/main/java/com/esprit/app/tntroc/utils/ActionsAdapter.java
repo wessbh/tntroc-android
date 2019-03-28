@@ -1,7 +1,9 @@
 package com.esprit.app.tntroc.utils;
 
 import android.graphics.Movie;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 
 import com.esprit.app.tntroc.Entity.Action;
 import com.esprit.app.tntroc.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -22,6 +25,7 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.MyViewHo
 
         public MyViewHolder(View view) {
             super(view);
+            img = (ImageView) view.findViewById(R.id.action_img);
             title = (TextView) view.findViewById(R.id.product_name);
             price = (TextView) view.findViewById(R.id.price);
             type = (TextView) view.findViewById(R.id.type);
@@ -60,6 +64,12 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.MyViewHo
         holder.price.setText(action.getAnnonce().getPrix()+"");
         holder.type.setText(action.getType());
         holder.status.setText(status_str);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        int width = displayMetrics.widthPixels;
+        Picasso.get().load(Constants.ANNONCE_IMG_PATH+action.getAnnonce().getImg())
+                .error(R.drawable.error_img)
+                .placeholder(R.drawable.placeholder)
+                .into(holder.img);
 }
 
     @Override

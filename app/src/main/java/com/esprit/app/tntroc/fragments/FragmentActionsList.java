@@ -131,7 +131,14 @@ public class FragmentActionsList extends Fragment {
                                 int status = post.getInt("status");
                                 String type = post.getString("status");
                                 int id_annonce_echange = post.getInt("id_annonce_echange");
+                                String title = post.getString("title");
+                                String description = post.getString("description");
+                                int user_id = post.getInt("user_id");
+                                String img = post.getString("img");
+                                String categorie = post.getString("categorie");
+                                int prix = post.getInt("prix");
                                 Action action = new Action();
+                                Annonce myAnnonce = new Annonce(title, description, user_id, img, categorie, prix);
                                 action.setId(id);
                                 action.setId_annonceur(id_annonceur);
                                 action.setId_annonce(id_annonce);
@@ -139,10 +146,7 @@ public class FragmentActionsList extends Fragment {
                                 action.setStatus(status);
                                 action.setType(type);
                                 action.setId_annonce_echange(id_annonce_echange);
-                                Log.d("testt", "before");
-                                getAnnonce(id_annonce);
-                                Log.d("testt", "after");
-                                action.setAnnonce(Constants.annonce_static);
+                                action.setAnnonce(myAnnonce);
                                 if(id_annonce_echange > 0){
                                     getAnnonce_echange(id_annonce_echange);
                                     action.setAnnonce_echange(Constants.annonce_static);

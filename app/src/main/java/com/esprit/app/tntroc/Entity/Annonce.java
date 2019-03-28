@@ -35,6 +35,15 @@ public class Annonce {
         this.prix = prix;
     }
 
+    public Annonce(String title, String description, int user_id, String img, String categorie, int prix) {
+        this.title = title;
+        this.description = description;
+        this.user_id = user_id;
+        this.img = img;
+        this.categorie = categorie;
+        this.prix = prix;
+    }
+
     public Annonce(int id, String title, String description, int user_id, String img, String created_at, String date_exp, int status, String updated_at, String categorie, int prix) {
         this.id = id;
         this.title = title;

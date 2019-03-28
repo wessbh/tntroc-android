@@ -22,10 +22,10 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            return FragmentActionsList.newInstance(1,"show_actions_recu");
+            return FragmentActionsList.newInstance(1,"show_actions_envoyee");
         }
         else {
-            return FragmentActionsList.newInstance(2,"show_actions_envoyee");
+            return FragmentActionsList.newInstance(2,"show_actions_recu");
         }
     }
 
