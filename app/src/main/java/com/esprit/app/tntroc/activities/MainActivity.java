@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
                         // Log and toast
                         String msg = getString(R.string.msg_token_fmt, token);
                         Log.d("firebaseToken", msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
             }
         });
         btn_add = (FloatingActionButton) findViewById(R.id.add_btn);
-        btn_add.setVisibility(View.GONE);
+        btn_add.    setVisibility(View.GONE);
         if (getAPIKey().equals("")){
             Intent intent = new Intent( getApplicationContext(), LoginActivity.class);
             startActivity(intent);
@@ -258,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements  FragmentManager.
             @Override
             public void onBackStackChanged() {
                 int bsEntry = fm.getBackStackEntryCount() ;
-                Toast.makeText(MainActivity.this, "i'm changed to: "+bsEntry, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "i'm changed to: "+bsEntry, Toast.LENGTH_SHORT).show();
                 if (bsEntry  > 0) {
                     //change to back arrow
                     result.getActionBarDrawerToggle().setDrawerIndicatorEnabled(false);

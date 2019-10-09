@@ -72,17 +72,12 @@ public class LoginActivity extends AppCompatActivity {
         logo = findViewById(R.id.logo);
         callbackManager = CallbackManager.Factory.create();
         input_username = findViewById(R.id.input_username);
-        input_ip = findViewById(R.id.input_ip);
         input_password = findViewById(R.id.input_password);
         btn_login = findViewById(R.id.btn_login);
         mQueue = Volley.newRequestQueue(getApplicationContext());
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(!input_ip.getText().toString().equals("")){
-                    Constants.WEBSERVICE_URL = "http://"+input_ip.getText();
-                }
                 username = input_username.getText().toString().trim();
                 password = input_password.getText().toString().trim();
                 if (validate()) {

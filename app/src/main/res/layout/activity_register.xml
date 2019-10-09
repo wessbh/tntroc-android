@@ -216,14 +216,5 @@
             android:text="@string/already_a_member_login"
             android:textSize="16dip" />
 
-        <TextView
-            android:id="@+id/link_main"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:gravity="center"
-            android:text="@string/this_link_is_for_test"
-            android:textSize="16dip" />
-
     </LinearLayout>
 </ScrollView>

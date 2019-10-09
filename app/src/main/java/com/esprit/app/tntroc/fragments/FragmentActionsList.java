@@ -183,7 +183,6 @@ public class FragmentActionsList extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            Log.d("testt", "inside");
                             JSONArray jsonArray = response.getJSONArray("post");
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject post = jsonArray.getJSONObject(i);

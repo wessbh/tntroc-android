@@ -44,8 +44,8 @@ public class RegisterActivity extends AppCompatActivity  {
     ImageView logo;
     EditText input_username,input_last_name, input_name,  input_password, input_reEnterPassword, input_address, input_mobile, input_email;
     Button btn_create_account, btn_upload_img, btn_date, upload;
-    TextView date_field, already_have_account, link_main;
-    String username, lastname, name, email, password, dateNiss, adress, numtel_str, rePassword;
+    TextView date_field, already_have_account;
+    String username, lastname, name, email, password, dateNiss, adress, numtel_str, rePassword, img_name;
     Bitmap cropped;
     ImageView imageView;
     private int mYear, mMonth, mDay, mHour, mMinute, numtel;
@@ -111,20 +111,6 @@ public class RegisterActivity extends AppCompatActivity  {
         });
 
         already_have_account = findViewById(R.id.link_login);
-        link_main = findViewById(R.id.link_main);
-        link_main.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                cropped.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                byte[] byteArray = stream.toByteArray();
-//                intent.putExtra("picture", byteArray);
-                startActivity(intent);
-                finish();
-            }
-        });
         btn_upload_img = findViewById(R.id.upload_img);
         btn_upload_img.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,6 +133,7 @@ public class RegisterActivity extends AppCompatActivity  {
                 if (validate()) {
                     Toast.makeText(RegisterActivity.this, "Creating account ...", Toast.LENGTH_LONG).show();
                     uploadImage();
+                    Toast.makeText(RegisterActivity.this, ""+String.valueOf(imageView.getTag()), Toast.LENGTH_SHORT).show();
                     registerRequest(username,name,lastname,adress,dateNiss,email,numtel_str,password);
                 }
                 else  Toast.makeText(RegisterActivity.this, "Something went wrong :(", Toast.LENGTH_LONG).show();
@@ -232,7 +219,8 @@ public class RegisterActivity extends AppCompatActivity  {
         date_field.setText(sdf.format(myCalendar.getTime()));
     }
 
-    public void registerRequest (final String username, final String name , final String lastname, final String adress, final String dateNiss, final String email, final String numtel, final String password ){
+    public void registerRequest (final String username, final String name , final String lastname, final String adress, final String dateNiss, final String email, final String numtel, final String password){
+        final ProgressDialog loading = ProgressDialog.show(this,"Registering...","Please wait...",false,false);
         String url =  Constants.WEBSERVICE_URL+"/mdw/v1/register";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
@@ -241,7 +229,11 @@ public class RegisterActivity extends AppCompatActivity  {
                     public void onResponse(String response) {
                         // response
 
-                        Toast.makeText(getApplication(),response, Toast.LENGTH_SHORT).show();
+                        loading.dismiss();
+                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+
                     }
                 },
                 new Response.ErrorListener()
@@ -256,6 +248,7 @@ public class RegisterActivity extends AppCompatActivity  {
             @Override
             protected Map<String, String> getParams()
             {
+                String img_name = input_username.getText().toString().trim()+"-img."+image_extension;
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("username", username);
                 params.put("name", name);
@@ -265,6 +258,7 @@ public class RegisterActivity extends AppCompatActivity  {
                 params.put("numtel", numtel);
                 params.put("adresse", adress);
                 params.put("datenaiss", dateNiss);
+                params.put("image", img_name);
 
                 return params;
             }
@@ -281,13 +275,12 @@ public class RegisterActivity extends AppCompatActivity  {
     }
 
     private void uploadImage(){
-        final ProgressDialog loading = ProgressDialog.show(this,"Uploading...","Please wait...",false,false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String s) {
                         //Disimissing the progress dialog
-                        loading.dismiss();
+                        //loading.dismiss();
                         //Showing toast message of the response
                         Toast.makeText(RegisterActivity.this, s , Toast.LENGTH_LONG).show();
                         Log.d("error_image", s);
@@ -297,7 +290,7 @@ public class RegisterActivity extends AppCompatActivity  {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         //Dismissing the progress dialog
-                        loading.dismiss();
+                        //loading.dismiss();
 
                         //Showing toast
                         Toast.makeText(RegisterActivity.this, "error", Toast.LENGTH_LONG).show();
